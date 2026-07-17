@@ -2,5 +2,9 @@ parameters:
     level: 6
     paths:
         - src
-    stubFiles:
-        - stubs/LayoutModel.stub
+    ignoreErrors:
+        -
+            identifier: property.notFound
+            message: '#^Access to an undefined property Contao\\LayoutModel::\$disableUtilityCss\.$#'
+            path: src/EventListener/GeneratePageListener.php
+            count: 1
