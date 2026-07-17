@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Plakart\CssUtilitiesBundle\:
+        resource: '../src/'
+        exclude:
+            - '../src/ContaoManager/'
+            - '../src/Util/'
+            - '../src/PlakartCssUtilitiesBundle.php'
