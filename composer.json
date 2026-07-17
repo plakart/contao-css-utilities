@@ -35,6 +35,7 @@
     },
     "scripts": {
         "cs-fix": "php-cs-fixer fix",
+        "generate-css": "php bin/generate-css.php",
         "phpstan": "phpstan analyse",
         "test": "phpunit"
     },
