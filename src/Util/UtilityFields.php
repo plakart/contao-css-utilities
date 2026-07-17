@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Plakart\CssUtilitiesBundle\Util;
 
-use Contao\CoreBundle\DataContainer\PaletteManipulator;
-
 final class UtilityFields
 {
     public const FIELDS = ['utilityMt', 'utilityMb', 'utilityPt', 'utilityPb'];
 
     /**
-     * Adds the four utility select fields and the utility_legend to every palette of the table.
+     * Registers the four utility select fields (including their sql definition) on the table.
+     *
+     * Palette manipulation happens later, in UtilityPaletteListener::__invoke(), so that
+     * palettes registered by third-party bundles or app DCA files after this file is loaded
+     * still receive the utility fields.
      */
     public static function register(string $table): void
     {
@@ -25,19 +27,6 @@ final class UtilityFields
                 'eval' => ['includeBlankOption' => true, 'tl_class' => 'w25'],
                 'sql' => ['type' => 'string', 'length' => 2, 'default' => ''],
             ];
-        }
-
-        $manipulator = PaletteManipulator::create()
-            ->addLegend('utility_legend', 'expert_legend', PaletteManipulator::POSITION_BEFORE, true)
-            ->addField(self::FIELDS, 'utility_legend', PaletteManipulator::POSITION_APPEND)
-        ;
-
-        foreach ($GLOBALS['TL_DCA'][$table]['palettes'] ?? [] as $name => $palette) {
-            if (!\is_string($palette)) {
-                continue;
-            }
-
-            $manipulator->applyToPalette($name, $table);
         }
     }
 }

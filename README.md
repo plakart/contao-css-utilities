@@ -22,6 +22,9 @@ composer require plakart/contao-css-utilities
 
 Then run the Contao install tool / migrations to add the new database columns.
 
+The four utility fields are `exclude`d by default — grant them to non-admin user
+groups in the Contao backend permissions before the selects appear.
+
 ## Overriding the scale
 
 Define the custom properties in your theme after `utilities.css` is loaded:

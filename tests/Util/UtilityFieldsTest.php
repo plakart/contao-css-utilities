@@ -16,7 +16,7 @@ final class UtilityFieldsTest extends TestCase
         parent::tearDown();
     }
 
-    public function testRegistersFieldsAndAppendsLegendToAllPalettes(): void
+    public function testRegistersFieldsOnly(): void
     {
         $GLOBALS['TL_DCA']['tl_content'] = [
             'palettes' => [
@@ -31,18 +31,27 @@ final class UtilityFieldsTest extends TestCase
 
         foreach (['utilityMt', 'utilityMb', 'utilityPt', 'utilityPb'] as $field) {
             self::assertArrayHasKey($field, $GLOBALS['TL_DCA']['tl_content']['fields']);
+            self::assertTrue($GLOBALS['TL_DCA']['tl_content']['fields'][$field]['exclude']);
             self::assertSame('select', $GLOBALS['TL_DCA']['tl_content']['fields'][$field]['inputType']);
             self::assertSame(
                 ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
                 $GLOBALS['TL_DCA']['tl_content']['fields'][$field]['options'],
             );
+            self::assertSame(
+                ['type' => 'string', 'length' => 2, 'default' => ''],
+                $GLOBALS['TL_DCA']['tl_content']['fields'][$field]['sql'],
+            );
         }
 
-        foreach (['text', 'image'] as $palette) {
-            self::assertStringContainsString('utility_legend', $GLOBALS['TL_DCA']['tl_content']['palettes'][$palette]);
-            self::assertStringContainsString('utilityMt,utilityMb,utilityPt,utilityPb', $GLOBALS['TL_DCA']['tl_content']['palettes'][$palette]);
-        }
-
+        // Palettes must remain untouched - that is now the listener's job.
+        self::assertSame(
+            '{type_legend},type;{expert_legend:hide},cssID',
+            $GLOBALS['TL_DCA']['tl_content']['palettes']['text'],
+        );
+        self::assertSame(
+            '{type_legend},type;{expert_legend:hide},cssID',
+            $GLOBALS['TL_DCA']['tl_content']['palettes']['image'],
+        );
         self::assertSame(['addImage'], $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__']);
     }
 }
