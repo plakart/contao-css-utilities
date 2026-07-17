@@ -4,3 +4,4 @@ composer.lock
 CLAUDE.local.md
 .phpunit.result.cache
 .php-cs-fixer.cache
+.superpowers/
