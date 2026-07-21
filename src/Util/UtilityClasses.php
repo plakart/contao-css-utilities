@@ -22,6 +22,10 @@ final class UtilityClasses
         6 => 'clamp(2rem, 1.6rem + 2vw, 4rem)',
         7 => 'clamp(3rem, 2.4rem + 3vw, 6rem)',
         8 => 'clamp(4rem, 3.2rem + 4vw, 8rem)',
+        9 => 'clamp(6rem, 4.8rem + 6vw, 12rem)',
+        10 => 'clamp(8rem, 6.4rem + 8vw, 16rem)',
+        11 => 'clamp(12rem, 9.6rem + 12vw, 24rem)',
+        12 => 'clamp(16rem, 12.8rem + 16vw, 32rem)',
     ];
 
     /**
@@ -29,7 +33,7 @@ final class UtilityClasses
      */
     public static function steps(): array
     {
-        return range(0, 8);
+        return range(0, 12);
     }
 
     /**

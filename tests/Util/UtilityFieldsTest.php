@@ -34,7 +34,7 @@ final class UtilityFieldsTest extends TestCase
             self::assertTrue($GLOBALS['TL_DCA']['tl_content']['fields'][$field]['exclude']);
             self::assertSame('select', $GLOBALS['TL_DCA']['tl_content']['fields'][$field]['inputType']);
             self::assertSame(
-                ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
+                ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
                 $GLOBALS['TL_DCA']['tl_content']['fields'][$field]['options'],
             );
             self::assertSame(

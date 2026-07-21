@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $GLOBALS['TL_LANG']['tl_content']['utility_legend'] = 'Abstände (Utilities)';
-$GLOBALS['TL_LANG']['tl_content']['utilityMt'] = ['Außenabstand oben', 'Fügt die entsprechende mt-*-Klasse hinzu (Skala 0-8).'];
-$GLOBALS['TL_LANG']['tl_content']['utilityMb'] = ['Außenabstand unten', 'Fügt die entsprechende mb-*-Klasse hinzu (Skala 0-8).'];
-$GLOBALS['TL_LANG']['tl_content']['utilityPt'] = ['Innenabstand oben', 'Fügt die entsprechende pt-*-Klasse hinzu (Skala 0-8).'];
-$GLOBALS['TL_LANG']['tl_content']['utilityPb'] = ['Innenabstand unten', 'Fügt die entsprechende pb-*-Klasse hinzu (Skala 0-8).'];
+$GLOBALS['TL_LANG']['tl_content']['utilityMt'] = ['Außenabstand oben', 'Fügt die entsprechende mt-*-Klasse hinzu (Skala 0-12).'];
+$GLOBALS['TL_LANG']['tl_content']['utilityMb'] = ['Außenabstand unten', 'Fügt die entsprechende mb-*-Klasse hinzu (Skala 0-12).'];
+$GLOBALS['TL_LANG']['tl_content']['utilityPt'] = ['Innenabstand oben', 'Fügt die entsprechende pt-*-Klasse hinzu (Skala 0-12).'];
+$GLOBALS['TL_LANG']['tl_content']['utilityPb'] = ['Innenabstand unten', 'Fügt die entsprechende pb-*-Klasse hinzu (Skala 0-12).'];
