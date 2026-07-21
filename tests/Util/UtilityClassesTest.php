@@ -34,11 +34,11 @@ final class UtilityClassesTest extends TestCase
     {
         $css = UtilityClasses::generateCss();
 
-        self::assertStringContainsString('--space-4: clamp(1rem, 0.8rem + 1vw, 2rem);', $css);
-        self::assertStringContainsString('--space-12: clamp(16rem, 12.8rem + 16vw, 32rem);', $css);
+        self::assertStringContainsString('--pcu-space-4: clamp(1rem, 0.8rem + 1vw, 2rem);', $css);
+        self::assertStringContainsString('--pcu-space-12: clamp(16rem, 12.8rem + 16vw, 32rem);', $css);
         self::assertStringContainsString('.mt-0 { margin-top: 0 !important; }', $css);
-        self::assertStringContainsString('.pb-8 { padding-bottom: var(--space-8) !important; }', $css);
-        self::assertStringContainsString('.pb-12 { padding-bottom: var(--space-12) !important; }', $css);
+        self::assertStringContainsString('.pb-8 { padding-bottom: var(--pcu-space-8) !important; }', $css);
+        self::assertStringContainsString('.pb-12 { padding-bottom: var(--pcu-space-12) !important; }', $css);
         self::assertSame(52, preg_match_all('/^\.[a-z]{2}-\d{1,2} \{ [a-z-]+: [^;]+ !important; \}$/m', $css));
     }
 }

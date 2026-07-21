@@ -8,7 +8,7 @@ no CSS knowledge required.
 
 - 52 fixed classes: `mt-0…12`, `mb-0…12`, `pt-0…12`, `pb-0…12`
 - Values are fluid (`clamp()`) and defined as CSS custom properties
-  `--space-1…--space-12`, so a theme can override the scale without renaming classes
+  `--pcu-space-1…--pcu-space-12`, so a theme can override the scale without renaming classes
 - On save, the selected classes are merged into the element's CSS class
   (`cssID` / `class`); manually added classes are preserved
 - `utilities.css` is loaded automatically on every page; each page layout has a
@@ -31,7 +31,7 @@ Define the custom properties in your theme after `utilities.css` is loaded:
 
 ```css
 :root {
-    --space-4: 1.25rem;
+    --pcu-space-4: 1.25rem;
 }
 ```
 

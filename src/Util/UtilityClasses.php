@@ -57,7 +57,7 @@ final class UtilityClasses
         $lines = [':root {'];
 
         foreach (self::SCALE as $step => $value) {
-            $lines[] = sprintf('  --space-%d: %s;', $step, $value);
+            $lines[] = sprintf('  --pcu-space-%d: %s;', $step, $value);
         }
 
         $lines[] = '}';
@@ -65,7 +65,7 @@ final class UtilityClasses
 
         foreach (self::PROPERTIES as $prefix => $property) {
             foreach (self::steps() as $step) {
-                $value = 0 === $step ? '0' : sprintf('var(--space-%d)', $step);
+                $value = 0 === $step ? '0' : sprintf('var(--pcu-space-%d)', $step);
                 $lines[] = sprintf('.%s-%d { %s: %s !important; }', $prefix, $step, $property, $value);
             }
         }
