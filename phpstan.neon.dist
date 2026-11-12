@@ -10,3 +10,8 @@ parameters:
             paths:
                 - src/EventListener/GeneratePageListener.php
                 - src/EventListener/LayoutListener.php
+        -
+            # RecordLabel exists since Contao 6.0; the listener checks it with instanceof
+            message: '#unknown class Contao\\CoreBundle\\DataContainer\\RecordLabel|Class Contao\\CoreBundle\\DataContainer\\RecordLabel not found#'
+            path: src/EventListener/DataContainer/UtilityClassLabelListener.php
+            reportUnmatched: false
