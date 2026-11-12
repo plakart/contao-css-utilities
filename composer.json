@@ -18,7 +18,8 @@
         "contao/manager-plugin": "^2.12",
         "friendsofphp/php-cs-fixer": "^3.40",
         "phpstan/phpstan": "^2.0",
-        "phpunit/phpunit": "^11.0 || ^12.0"
+        "phpunit/phpunit": "^11.0 || ^12.0",
+        "contao/test-case": "^5.7 || ^6.0"
     },
     "conflict": {
         "contao/manager-plugin": "<2.0"

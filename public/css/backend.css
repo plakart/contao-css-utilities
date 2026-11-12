@@ -1,0 +1,16 @@
+.pcu-class-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 10px 20px;
+    margin-top: 3px;
+}
+
+.pcu-class-selection__group > label {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.pcu-class-selection__group > select,
+.pcu-class-selection__group > .tl_select_wrapper {
+    width: 100%;
+}

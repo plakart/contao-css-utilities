@@ -13,3 +13,11 @@ services:
             - '../src/PlakartCssUtilitiesBundle.php'
             - '../src/Target/Target.php'
             - '../src/ClassSelection/ClassGroup.php'
+            - '../src/ClassSelection/SelectionNormalizer.php'
+            - '../src/Widget/'
+
+    Plakart\CssUtilitiesBundle\Target\TargetRegistry:
+        public: true
+
+    Plakart\CssUtilitiesBundle\ClassSelection\ClassGroupRepository:
+        public: true
