@@ -29,7 +29,7 @@ final class PresetImporterTest extends TestCase
     {
         $preset = $this->fixture();
 
-        self::assertSame(['groups' => 2, 'classes' => 3], new PresetImporter($this->connection)->apply($preset));
+        self::assertSame(['groups' => 2, 'classes' => 3, 'updatedGroups' => 0, 'updatedClasses' => 0], new PresetImporter($this->connection)->apply($preset));
 
         $group = $this->connection->fetchAssociative("SELECT * FROM tl_pcu_class_group WHERE alias = 'buttons'");
         self::assertIsArray($group);
@@ -59,7 +59,7 @@ final class PresetImporterTest extends TestCase
         $importer->apply($this->fixture());
 
         self::assertFalse($importer->plan($this->fixture())->hasChanges());
-        self::assertSame(['groups' => 0, 'classes' => 0], $importer->apply($this->fixture()));
+        self::assertSame(['groups' => 0, 'classes' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0], $importer->apply($this->fixture()));
         self::assertSame(3, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM tl_pcu_class'));
     }
 
@@ -79,7 +79,7 @@ final class PresetImporterTest extends TestCase
         self::assertSame(1, $plan->countNewGroups());
         self::assertSame(2, $plan->countNewClasses());
 
-        self::assertSame(['groups' => 1, 'classes' => 2], $importer->apply($this->fixture()));
+        self::assertSame(['groups' => 1, 'classes' => 2, 'updatedGroups' => 0, 'updatedClasses' => 0], $importer->apply($this->fixture()));
 
         // Existing group and class are untouched, the new class is appended
         $group = $this->connection->fetchAssociative('SELECT title, targets FROM tl_pcu_class_group WHERE id = ?', [$groupId]);
@@ -97,11 +97,100 @@ final class PresetImporterTest extends TestCase
     {
         $importer = new PresetImporter($this->connection);
 
-        self::assertSame(['groups' => 1, 'classes' => 1], $importer->apply($this->fixture(), ['buttons' => ['btn_hyperlink_secondary']]));
+        self::assertSame(['groups' => 1, 'classes' => 1, 'updatedGroups' => 0, 'updatedClasses' => 0], $importer->apply($this->fixture(), ['buttons' => ['btn_hyperlink_secondary']]));
         self::assertSame(['btn_hyperlink_secondary'], $this->connection->fetchFirstColumn('SELECT cssClass FROM tl_pcu_class'));
 
-        self::assertSame(['groups' => 1, 'classes' => 0], $importer->apply($this->fixture(), ['article-width' => []]));
+        self::assertSame(['groups' => 1, 'classes' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0], $importer->apply($this->fixture(), ['article-width' => []]));
         self::assertSame(2, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM tl_pcu_class_group'));
+    }
+
+    public function testPlanShowsDifferencesOfExistingRecords(): void
+    {
+        $groupId = self::insertGroup($this->connection, ['title' => 'Old title', 'alias' => 'buttons', 'multiple' => 1, 'targets' => ['content', 'page'], 'contentTypes' => ['text']], [
+            'btn_hyperlink_primary' => 'Old label',
+            'btn_hyperlink_secondary' => ['label' => 'Button sekundär', 'published' => 0],
+        ]);
+        self::insertGroup($this->connection, ['title' => 'Artikelbreite', 'alias' => 'article-width', 'multiple' => 1, 'targets' => ['news', 'article'], 'published' => 0], [
+            'full--width' => 'Volle Breite / ohne Abstand',
+        ]);
+
+        $plan = new PresetImporter($this->connection)->plan($this->fixture());
+        [$buttons, $width] = $plan->groups;
+
+        self::assertSame([
+            ['field' => 'title', 'old' => 'Old title', 'new' => 'Button-Stil'],
+            ['field' => 'multiple', 'old' => 'yes', 'new' => 'no'],
+            ['field' => 'targets', 'old' => 'content: text; page', 'new' => 'content: hyperlink'],
+        ], $buttons['changes']);
+        self::assertSame([['field' => 'label', 'old' => 'Old label', 'new' => 'Button primär']], $buttons['classes'][0]['changes']);
+        self::assertSame([], $buttons['classes'][1]['changes']);
+
+        // Target order does not matter
+        self::assertSame([], $width['changes']);
+        self::assertSame([], $width['classes'][0]['changes']);
+
+        self::assertSame(1, $plan->countChangedGroups());
+        self::assertSame(1, $plan->countChangedClasses());
+        self::assertTrue($plan->hasChanges());
+        self::assertSame(0, $plan->countNewGroups() + $plan->countNewClasses());
+        self::assertGreaterThan(0, $groupId);
+    }
+
+    public function testExistingRecordsStayUnchangedWithoutUpdates(): void
+    {
+        $groupId = self::insertGroup($this->connection, ['title' => 'Old title', 'alias' => 'buttons', 'targets' => ['page']], ['btn_hyperlink_primary' => 'Old label']);
+
+        $result = new PresetImporter($this->connection)->apply($this->fixture());
+
+        self::assertSame(['groups' => 1, 'classes' => 2, 'updatedGroups' => 0, 'updatedClasses' => 0], $result);
+        self::assertSame('Old title', $this->connection->fetchOne('SELECT title FROM tl_pcu_class_group WHERE id = ?', [$groupId]));
+        self::assertSame('Old label', $this->connection->fetchOne("SELECT label FROM tl_pcu_class WHERE cssClass = 'btn_hyperlink_primary'"));
+    }
+
+    public function testUpdatesOnlyRequestedRecords(): void
+    {
+        $groupId = self::insertGroup($this->connection, ['title' => 'Old title', 'alias' => 'buttons', 'multiple' => 1, 'targets' => ['page'], 'published' => 0], [
+            'btn_hyperlink_primary' => ['label' => 'Old label', 'sorting' => 512],
+            'btn_hyperlink_secondary' => ['label' => 'Old secondary', 'published' => 1],
+        ]);
+
+        $result = new PresetImporter($this->connection)->apply(
+            $this->fixture(),
+            [],
+            ['groups' => ['buttons'], 'classes' => ['buttons' => ['btn_hyperlink_secondary']]],
+        );
+
+        self::assertSame(['groups' => 0, 'classes' => 0, 'updatedGroups' => 1, 'updatedClasses' => 1], $result);
+
+        $group = $this->connection->fetchAssociative('SELECT * FROM tl_pcu_class_group WHERE id = ?', [$groupId]);
+        self::assertIsArray($group);
+        self::assertSame('Button-Stil', $group['title']);
+        self::assertSame('buttons', $group['alias']);
+        self::assertSame(0, (int) $group['multiple']);
+        self::assertSame(1, (int) $group['published']);
+        self::assertSame(serialize(['content']), $group['targets']);
+        self::assertSame(serialize(['hyperlink']), $group['contentTypes']);
+
+        $classes = $this->connection->fetchAllAssociativeIndexed('SELECT cssClass, label, published, sorting FROM tl_pcu_class WHERE pid = ?', [$groupId]);
+        self::assertSame('Old label', $classes['btn_hyperlink_primary']['label']);
+        self::assertSame(512, (int) $classes['btn_hyperlink_primary']['sorting']);
+        self::assertSame('Button sekundär', $classes['btn_hyperlink_secondary']['label']);
+        self::assertSame(0, (int) $classes['btn_hyperlink_secondary']['published']);
+
+        // The empty selection imported nothing new
+        self::assertSame(1, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM tl_pcu_class_group'));
+        self::assertSame([], new PresetImporter($this->connection)->plan($this->fixture())->groups[0]['changes']);
+    }
+
+    public function testUpdateRequestForUnchangedOrUnknownRecordsIsIgnored(): void
+    {
+        $importer = new PresetImporter($this->connection);
+        $importer->apply($this->fixture());
+
+        self::assertSame(
+            ['groups' => 0, 'classes' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0],
+            $importer->apply($this->fixture(), null, ['groups' => ['buttons', 'unknown'], 'classes' => ['buttons' => ['btn_hyperlink_primary', 'nope']]]),
+        );
     }
 
     public function testRollsBackOnFailure(): void

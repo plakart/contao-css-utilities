@@ -28,3 +28,41 @@
 .pcu-tree li {
     margin: 4px 0;
 }
+
+.pcu-badge {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 0 6px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+.pcu-badge--new {
+    background: #d8f0d8;
+    color: #1d5a1d;
+}
+
+.pcu-badge--changed {
+    background: #fbe8c8;
+    color: #6b4500;
+}
+
+.pcu-tree ul.pcu-changes {
+    padding: 2px 0 4px 25px;
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.pcu-tree ul.pcu-changes li {
+    margin: 2px 0;
+}
+
+.pcu-changes del {
+    color: #a33;
+}
+
+.pcu-changes ins {
+    color: #1d5a1d;
+    text-decoration: none;
+}

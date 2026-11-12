@@ -83,12 +83,14 @@ class ImportController extends AbstractBackendController
         }
 
         $preset = PresetSerializer::fromJson($json);
-        $created = $this->importer->apply($preset, self::selection($this->importer->plan($preset), $request));
+        $result = $this->importer->apply($preset, self::selection($this->importer->plan($preset), $request), self::updates($request));
 
         Message::addConfirmation(\sprintf(
             $this->lang('pcu_import_done'),
-            $created['groups'],
-            $created['classes'],
+            $result['groups'],
+            $result['classes'],
+            $result['updatedGroups'],
+            $result['updatedClasses'],
         ));
 
         return new RedirectResponse($this->generateUrl('contao_backend', ['do' => 'pcu_css_classes']), Response::HTTP_SEE_OTHER);
@@ -114,6 +116,25 @@ class ImportController extends AbstractBackendController
         }
 
         return $selection;
+    }
+
+    /**
+     * @return array{groups: list<string>, classes: array<string, list<string>>}
+     */
+    private static function updates(Request $request): array
+    {
+        $classes = [];
+
+        foreach ($request->request->all('updateClasses') as $alias => $values) {
+            if (\is_array($values)) {
+                $classes[(string) $alias] = array_values(array_map(strval(...), $values));
+            }
+        }
+
+        return [
+            'groups' => array_values(array_map(strval(...), $request->request->all('updateGroups'))),
+            'classes' => $classes,
+        ];
     }
 
     private function readSource(Request $request): string

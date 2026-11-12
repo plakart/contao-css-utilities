@@ -35,7 +35,7 @@ migration and offers a back-end import/export for later updates.
 | Preset format | JSON (`format: plakart-css-classes`, `version: 1`); export and barebone file share the same format |
 | Preset file | Configurable, default `files/theme/css-classes.json` (relative to the project dir) |
 | Install import | Migration imports the preset file once when the group table is empty |
-| Later updates | Back-end import with preview; existing groups/classes are detected and never duplicated or overwritten |
+| Later updates | Back-end import with preview; existing groups/classes are detected and never duplicated; they are only overwritten if "update" is checked per group or class |
 | Export | All or selected groups/classes as JSON download |
 | Versions | Contao `^5.7 \|\| ^6.0`, PHP `^8.4`, release 2.0.0 |
 | Language | English code/docs; back-end labels `en` + `de` |
@@ -176,9 +176,11 @@ the generic `ClassAttributeMerger`.
 - Matching: group by `alias`, class by `cssClass` within its group.
 - `PresetImporter::plan(Preset)` → `ImportPlan` listing each group/class as `new`
   or `existing`.
-- `PresetImporter::apply(Preset, selection)` creates selected new groups (with
-  their selected classes) and appends selected new classes to existing groups.
-  Existing records are never changed. Runs in one transaction.
+- `PresetImporter::apply(Preset, selection, updates)` creates selected new groups
+  (with their selected classes), appends selected new classes to existing groups and
+  overwrites existing groups/classes only if listed in `updates` (title, multiple,
+  targets incl. types, published; label, published). Alias and CSS class never
+  change. Runs in one transaction.
 - UI (`ImportController`, route `/contao/pcu-css-classes/import`):
   1. Upload a JSON file, or "Load preset file" (shown only if the configured file exists).
   2. Preview tree with checkboxes; new entries preselected, existing ones shown
@@ -249,3 +251,6 @@ groups/classes (all preselected) → JSON download
 - Back-end templates need `contao/templates/.twig-root`.
 - Found while testing on Contao 6: the card-header wrapper crashed on the
   `RecordLabel` returned by the core label callback (also affects 1.1.0).
+- Import can update existing records on request: the preview lists the
+  differences of existing groups and classes, each with an unchecked "update"
+  checkbox. Without it, existing records stay unchanged (as before).

@@ -77,8 +77,14 @@ Groups and classes can be exchanged as JSON — see [docs/preset-format.md](docs
 
 - **Export:** "Export" in the module; choose groups and classes, download a JSON file.
 - **Import:** "Import" in the module; upload a JSON file or load the theme preset
-  file, then choose in a preview what to import. Existing groups (same alias) and
-  classes (same class in that group) are recognised and never changed or duplicated.
+  file, then choose in a preview what to import. Groups are matched by alias,
+  classes by their CSS class within the group, so nothing is duplicated.
+  - New groups and classes are preselected.
+  - Existing ones stay unchanged by default. If they differ from the file (title,
+    multiple choice, "show in" and types, published; for classes: label, published),
+    the preview lists the differences and you can check "update" per group or class.
+  - Alias and CSS class are never changed by an import: a renamed alias or class in
+    the file shows up as a new group or class.
 - **On install:** if the project contains the preset file and no group exists yet,
   `contao:migrate` imports it once. If you later delete all groups and the file still
   exists, the next migration imports it again. An invalid file is skipped by the

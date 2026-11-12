@@ -1,6 +1,22 @@
 {% extends '@Contao/be_main.html.twig' %}
 {% trans_default_domain 'contao_default' %}
 
+{% macro changes(changes) %}
+    {% if changes is not empty %}
+        <ul class="pcu-changes">
+            {% for change in changes %}
+                {% set yes_no = change.field in ['multiple', 'published'] %}
+                <li>
+                    {{ ('MSC.pcu_field_' ~ change.field)|trans }}:
+                    <del>{{ yes_no ? ('MSC.' ~ change.old)|trans : (change.old ?: '–') }}</del>
+                    →
+                    <ins>{{ yes_no ? ('MSC.' ~ change.new)|trans : (change.new ?: '–') }}</ins>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
 {% block main_content %}
     <div id="tl_buttons">
         <a href="{{ path('plakart_css_utilities_import') }}" class="header_back" accesskey="b">{{ 'MSC.backBT'|trans }}</a>
@@ -8,6 +24,8 @@
 
     {% if not plan.hasChanges() %}
         <p class="tl_info">{{ 'MSC.pcu_import_nothing_new'|trans }}</p>
+    {% elseif plan.countChangedGroups() + plan.countChangedClasses() > 0 %}
+        <p class="tl_info">{{ 'MSC.pcu_import_changes_hint'|trans }}</p>
     {% endif %}
 
     <form method="post" action="{{ path('plakart_css_utilities_import') }}" class="tl_form" data-turbo="false">
@@ -20,20 +38,43 @@
                 {% set group = item.group %}
                 <fieldset class="tl_box pcu-tree">
                     <legend>
-                        <label>
-                            <input type="checkbox" class="tl_checkbox" name="groups[]" value="{{ group.alias }}"{{ item.isNew ? ' checked' : ' disabled' }}>
-                            {{ group.title }} <span class="tl_gray">[{{ group.alias }}]</span>
-                            {% if not item.isNew %}<span class="tl_gray">– {{ 'MSC.pcu_import_exists'|trans }}</span>{% endif %}
-                        </label>
+                        {% if item.isNew %}
+                            <label>
+                                <input type="checkbox" class="tl_checkbox" name="groups[]" value="{{ group.alias }}" checked>
+                                {{ group.title }} <span class="tl_gray">[{{ group.alias }}]</span>
+                                <span class="pcu-badge pcu-badge--new">{{ 'MSC.pcu_import_new'|trans }}</span>
+                            </label>
+                        {% elseif item.changes is not empty %}
+                            <label>
+                                <input type="checkbox" class="tl_checkbox" name="updateGroups[]" value="{{ group.alias }}">
+                                {{ group.title }} <span class="tl_gray">[{{ group.alias }}]</span>
+                                <span class="pcu-badge pcu-badge--changed">{{ 'MSC.pcu_import_update'|trans }}</span>
+                            </label>
+                        {% else %}
+                            {{ group.title }} <span class="tl_gray">[{{ group.alias }}] – {{ 'MSC.pcu_import_exists'|trans }}</span>
+                        {% endif %}
                     </legend>
+                    {{ _self.changes(item.changes) }}
                     <ul>
                         {% for entry in item.classes %}
+                            {% set class = entry.class %}
                             <li>
-                                <label>
-                                    <input type="checkbox" class="tl_checkbox" name="classes[{{ group.alias }}][]" value="{{ entry.class.class }}"{{ entry.isNew ? ' checked' : ' disabled' }}>
-                                    {{ entry.class.label }} <code>.{{ entry.class.class|replace({' ': ' .'}) }}</code>
-                                    {% if not entry.isNew %}<span class="tl_gray">– {{ 'MSC.pcu_import_exists'|trans }}</span>{% endif %}
-                                </label>
+                                {% if entry.isNew %}
+                                    <label>
+                                        <input type="checkbox" class="tl_checkbox" name="classes[{{ group.alias }}][]" value="{{ class.class }}" checked>
+                                        {{ class.label }} <code>.{{ class.class|replace({' ': ' .'}) }}</code>
+                                        <span class="pcu-badge pcu-badge--new">{{ 'MSC.pcu_import_new'|trans }}</span>
+                                    </label>
+                                {% elseif entry.changes is not empty %}
+                                    <label>
+                                        <input type="checkbox" class="tl_checkbox" name="updateClasses[{{ group.alias }}][]" value="{{ class.class }}">
+                                        {{ class.label }} <code>.{{ class.class|replace({' ': ' .'}) }}</code>
+                                        <span class="pcu-badge pcu-badge--changed">{{ 'MSC.pcu_import_update'|trans }}</span>
+                                    </label>
+                                    {{ _self.changes(entry.changes) }}
+                                {% else %}
+                                    <span class="tl_gray">{{ class.label }} <code>.{{ class.class|replace({' ': ' .'}) }}</code> – {{ 'MSC.pcu_import_exists'|trans }}</span>
+                                {% endif %}
                             </li>
                         {% else %}
                             <li class="tl_gray">{{ 'MSC.pcu_no_classes'|trans }}</li>
