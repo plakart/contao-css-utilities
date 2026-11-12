@@ -1,6 +1,6 @@
 # plakart/contao-css-utilities
 
-Tailwind-style spacing utility classes for Contao 5. Editors assign margins and
+Tailwind-style spacing utility classes for Contao 5.7+ and 6. Editors assign margins and
 paddings to content elements, articles, and form fields via four select fields —
 no CSS knowledge required.
 
@@ -11,7 +11,8 @@ no CSS knowledge required.
   `--pcu-space-1…--pcu-space-12`, so a theme can override the scale without renaming classes
 - On save, the selected classes are merged into the element's CSS class
   (`cssID` / `class`); manually added classes are preserved
-- `utilities.css` is loaded automatically on every page; each page layout has a
+- `utilities.css` is loaded automatically on every page (classic and modern Twig
+  layouts); each page layout has a
   "Disable utility CSS" checkbox to opt out
 
 ## Installation

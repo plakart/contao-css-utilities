@@ -12,12 +12,14 @@ use Contao\PageRegular;
 #[AsHook('generatePage')]
 class GeneratePageListener
 {
+    public const STYLESHEET = 'bundles/plakartcssutilities/css/utilities.css|static';
+
     public function __invoke(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
     {
         if ($layout->disableUtilityCss) {
             return;
         }
 
-        $GLOBALS['TL_CSS'][] = 'bundles/plakartcssutilities/css/utilities.css|static';
+        $GLOBALS['TL_CSS'][] = self::STYLESHEET;
     }
 }

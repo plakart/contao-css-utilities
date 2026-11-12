@@ -9,7 +9,7 @@ Greenfield Contao bundle — **not yet scaffolded**. The directory is empty apar
 - Intended package: `plakart/contao-css-utilities` (working title; directory name `contao-utilities-classes-bundle` is outdated — don't treat it as the package name)
 - PHP namespace: `Plakart\CssUtilitiesBundle`
 - Purpose: provide Tailwind-style utility CSS classes (margins, paddings, etc.) that editors can assign to Contao elements via DCA fields, modeled on `erdmannfreunde/theme-toolbox`
-- Targets: Contao `^5.0`, PHP `>=8.2`
+- Targets: Contao `^5.7 || ^6.0`, PHP `^8.4`; modern (Twig) layouts skip the `generatePage` hook, so CSS loading also hooks into `LayoutEvent`
 
 ## Conventions
 

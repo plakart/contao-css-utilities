@@ -1,10 +1,12 @@
 parameters:
     level: 6
+    phpVersion: 80400
     paths:
         - src
     ignoreErrors:
         -
             identifier: property.notFound
             message: '#^Access to an undefined property Contao\\LayoutModel::\$disableUtilityCss\.$#'
-            path: src/EventListener/GeneratePageListener.php
-            count: 1
+            paths:
+                - src/EventListener/GeneratePageListener.php
+                - src/EventListener/LayoutListener.php

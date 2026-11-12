@@ -40,7 +40,7 @@ final class UtilityClassSaveListenerTest extends TestCase
             ['id', 5],
         ]);
 
-        (new UtilityClassSaveListener($connection))->updateCssId($dc);
+        new UtilityClassSaveListener($connection)->updateCssId($dc);
     }
 
     public function testHandlesEmptyCssIdColumn(): void
@@ -72,7 +72,7 @@ final class UtilityClassSaveListenerTest extends TestCase
             ['id', 7],
         ]);
 
-        (new UtilityClassSaveListener($connection))->updateCssId($dc);
+        new UtilityClassSaveListener($connection)->updateCssId($dc);
     }
 
     public function testMergesSelectionIntoFormFieldClass(): void
@@ -104,7 +104,7 @@ final class UtilityClassSaveListenerTest extends TestCase
             ['id', 9],
         ]);
 
-        (new UtilityClassSaveListener($connection))->updateClass($dc);
+        new UtilityClassSaveListener($connection)->updateClass($dc);
     }
 
     public function testDoesNothingWhenRecordIsMissing(): void
@@ -119,6 +119,6 @@ final class UtilityClassSaveListenerTest extends TestCase
             ['id', 1],
         ]);
 
-        (new UtilityClassSaveListener($connection))->updateCssId($dc);
+        new UtilityClassSaveListener($connection)->updateCssId($dc);
     }
 }

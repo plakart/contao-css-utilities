@@ -10,7 +10,7 @@ require __DIR__.'/../vendor/autoload.php';
 $target = __DIR__.'/../public/css/utilities.css';
 
 if (!is_dir(\dirname($target))) {
-    mkdir(\dirname($target), 0775, true);
+    mkdir(\dirname($target), 0o775, true);
 }
 
 file_put_contents($target, UtilityClasses::generateCss());

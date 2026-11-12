@@ -15,3 +15,9 @@ PaletteManipulator::create()
     ->addLegend('utility_legend', 'style_legend', PaletteManipulator::POSITION_AFTER, true)
     ->addField('disableUtilityCss', 'utility_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_layout');
+
+// Modern (Twig) layouts have no style_legend
+PaletteManipulator::create()
+    ->addLegend('utility_legend', 'modules_legend', PaletteManipulator::POSITION_AFTER, true)
+    ->addField('disableUtilityCss', 'utility_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('modern', 'tl_layout');

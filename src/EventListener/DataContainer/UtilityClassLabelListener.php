@@ -18,7 +18,7 @@ use Plakart\CssUtilitiesBundle\Util\UtilityClasses;
  */
 class UtilityClassLabelListener
 {
-    private \Closure|null $wrapper = null;
+    private ?\Closure $wrapper = null;
 
     #[AsCallback('tl_content', 'config.onload')]
     public function __invoke(?DataContainer $dc = null): void
