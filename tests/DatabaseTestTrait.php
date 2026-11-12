@@ -42,6 +42,20 @@ trait DatabaseTestTrait
         $class->addColumn('published', 'boolean', ['default' => true]);
         $class->setPrimaryKey(['id']);
 
+        foreach (['tl_content' => 'cssID', 'tl_article' => 'cssID', 'tl_form_field' => 'class', 'tl_module' => 'cssID', 'tl_page' => 'cssClass'] as $name => $column) {
+            $table = $schema->createTable($name);
+            $table->addColumn('id', 'integer', ['autoincrement' => true]);
+            $table->addColumn('type', 'string', ['length' => 64, 'default' => '']);
+            $table->addColumn($column, 'text', ['notnull' => false]);
+            $table->addColumn('pcuClasses', 'blob', ['notnull' => false]);
+
+            foreach (['utilityMt', 'utilityMb', 'utilityPt', 'utilityPb'] as $field) {
+                $table->addColumn($field, 'string', ['length' => 2, 'default' => '']);
+            }
+
+            $table->setPrimaryKey(['id']);
+        }
+
         foreach ($schema->toSql($connection->getDatabasePlatform()) as $sql) {
             $connection->executeStatement($sql);
         }

@@ -21,3 +21,10 @@ services:
 
     Plakart\CssUtilitiesBundle\ClassSelection\ClassGroupRepository:
         public: true
+
+    # Registered as array callbacks in LoadDataContainerListener
+    Plakart\CssUtilitiesBundle\EventListener\DataContainer\ClassSelectionPaletteListener:
+        public: true
+
+    Plakart\CssUtilitiesBundle\EventListener\DataContainer\ClassAttributeListener:
+        public: true

@@ -9,6 +9,11 @@ final class UtilityFields
     public const FIELDS = ['utilityMt', 'utilityMb', 'utilityPt', 'utilityPb'];
 
     /**
+     * Tables that receive the spacing utility fields (see contao/dca).
+     */
+    public const TABLES = ['tl_content', 'tl_article', 'tl_form_field'];
+
+    /**
      * Registers the four utility select fields (including their sql definition) on the table.
      *
      * Palette manipulation happens later, in UtilityPaletteListener::__invoke(), so that

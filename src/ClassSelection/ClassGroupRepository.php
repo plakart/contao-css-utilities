@@ -40,6 +40,20 @@ class ClassGroupRepository implements ResetInterface
     }
 
     /**
+     * Whether any published group (with published classes) targets the key, regardless of types.
+     */
+    public function hasPublishedForTarget(string $targetKey): bool
+    {
+        foreach ($this->loadGroups() as $group) {
+            if (isset($group->targets[$targetKey])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Every class token defined in any group, published or not.
      *
      * @return list<string>

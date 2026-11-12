@@ -7,3 +7,5 @@ $GLOBALS['TL_LANG']['tl_content']['utilityMt'] = ['Margin top (margin-top)', 'Ad
 $GLOBALS['TL_LANG']['tl_content']['utilityMb'] = ['Margin bottom (margin-bottom)', 'Adds the corresponding mb-* class (scale 0-12).'];
 $GLOBALS['TL_LANG']['tl_content']['utilityPt'] = ['Padding top (padding-top)', 'Adds the corresponding pt-* class (scale 0-12).'];
 $GLOBALS['TL_LANG']['tl_content']['utilityPb'] = ['Padding bottom (padding-bottom)', 'Adds the corresponding pb-* class (scale 0-12).'];
+
+$GLOBALS['TL_LANG']['tl_content']['pcu_classes_legend'] = 'CSS classes';
