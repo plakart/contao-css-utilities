@@ -15,6 +15,11 @@ services:
             - '../src/ClassSelection/ClassGroup.php'
             - '../src/ClassSelection/SelectionNormalizer.php'
             - '../src/Widget/'
+            - '../src/Preset/Preset.php'
+            - '../src/Preset/PresetGroup.php'
+            - '../src/Preset/PresetClass.php'
+            - '../src/Preset/PresetSerializer.php'
+            - '../src/Preset/InvalidPresetException.php'
 
     Plakart\CssUtilitiesBundle\Target\TargetRegistry:
         public: true

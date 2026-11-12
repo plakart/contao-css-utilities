@@ -1,0 +1,43 @@
+{
+    "format": "plakart-css-classes",
+    "version": 1,
+    "groups": [
+        {
+            "alias": "buttons",
+            "title": "Button-Stil",
+            "multiple": false,
+            "targets": {
+                "content": [
+                    "hyperlink"
+                ]
+            },
+            "classes": [
+                {
+                    "class": "btn_hyperlink_primary",
+                    "label": "Button primär"
+                },
+                {
+                    "class": "btn_hyperlink_secondary",
+                    "label": "Button sekundär",
+                    "published": false
+                }
+            ]
+        },
+        {
+            "alias": "article-width",
+            "title": "Artikelbreite",
+            "multiple": true,
+            "targets": {
+                "article": [],
+                "news": []
+            },
+            "classes": [
+                {
+                    "class": "full--width",
+                    "label": "Volle Breite / ohne Abstand"
+                }
+            ],
+            "published": false
+        }
+    ]
+}
