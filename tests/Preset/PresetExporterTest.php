@@ -66,16 +66,19 @@ final class PresetExporterTest extends TestCase
         self::assertCount(1, $preset->groups[0]->classes);
     }
 
-    public function testExportsSelectedClassesWithTheirGroups(): void
+    public function testExportsSelectedClassesOfSelectedGroupsOnly(): void
     {
         $classId = (int) $this->connection->fetchOne("SELECT id FROM tl_pcu_class WHERE cssClass = 'btn-secondary'");
 
-        $preset = new PresetExporter($this->connection)->export([$this->width], [$classId]);
+        $preset = new PresetExporter($this->connection)->export([$this->buttons, $this->width], [$classId]);
 
         self::assertSame(['buttons', 'width'], self::aliases($preset));
         self::assertSame('btn-secondary', $preset->groups[0]->classes[0]->class);
         self::assertCount(1, $preset->groups[0]->classes);
         self::assertSame([], $preset->groups[1]->classes);
+
+        // A selected class does not pull in its unselected group
+        self::assertSame(['width'], self::aliases(new PresetExporter($this->connection)->export([$this->width], [$classId])));
     }
 
     public function testEmptySelection(): void

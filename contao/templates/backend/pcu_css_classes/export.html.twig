@@ -1,0 +1,48 @@
+{% extends '@Contao/be_main.html.twig' %}
+{% trans_default_domain 'contao_default' %}
+
+{% block main_content %}
+    <div id="tl_buttons">
+        <a href="{{ path('contao_backend', {do: 'pcu_css_classes'}) }}" class="header_back" accesskey="b">{{ 'MSC.backBT'|trans }}</a>
+    </div>
+
+    {% if groups is empty %}
+        <p class="tl_info">{{ 'MSC.pcu_export_empty'|trans }}</p>
+    {% else %}
+        <form method="post" class="tl_form" data-turbo="false">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+
+            <div class="tl_formbody_edit">
+                <p class="tl_help tl_tip">{{ 'MSC.pcu_export_help'|trans }}</p>
+                {% for group in groups %}
+                    <fieldset class="tl_box pcu-tree">
+                        <legend>
+                            <label>
+                                <input type="checkbox" class="tl_checkbox" name="groups[]" value="{{ group.id }}" checked>
+                                {{ group.title }} <span class="tl_gray">[{{ group.alias }}]</span>
+                            </label>
+                        </legend>
+                        <ul>
+                            {% for class in group.classes %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" class="tl_checkbox" name="classes[]" value="{{ class.id }}" checked>
+                                        {{ class.label }} <code>.{{ class.cssClass|replace({' ': ' .'}) }}</code>
+                                    </label>
+                                </li>
+                            {% else %}
+                                <li class="tl_gray">{{ 'MSC.pcu_no_classes'|trans }}</li>
+                            {% endfor %}
+                        </ul>
+                    </fieldset>
+                {% endfor %}
+            </div>
+
+            <div class="tl_formbody_submit">
+                <div class="tl_submit_container">
+                    <button type="submit" class="tl_submit">{{ 'MSC.pcu_export_download'|trans }}</button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

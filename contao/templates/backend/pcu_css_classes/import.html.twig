@@ -1,0 +1,41 @@
+{% extends '@Contao/be_main.html.twig' %}
+{% trans_default_domain 'contao_default' %}
+
+{% block main_content %}
+    <div id="tl_buttons">
+        <a href="{{ path('contao_backend', {do: 'pcu_css_classes'}) }}" class="header_back" accesskey="b">{{ 'MSC.backBT'|trans }}</a>
+    </div>
+
+    {% if import_error %}
+        <p class="tl_error">{{ import_error }}</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="tl_form" data-turbo="false">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+        <input type="hidden" name="step" value="preview">
+
+        <div class="tl_formbody_edit">
+            <fieldset class="tl_box">
+                <legend>{{ 'MSC.pcu_import_upload_legend'|trans }}</legend>
+                <div class="widget">
+                    <h3><label for="ctrl_preset">{{ 'MSC.pcu_import_upload'|trans }}</label></h3>
+                    <input type="file" name="preset" id="ctrl_preset" accept=".json,application/json">
+                    <p class="tl_help tl_tip">{{ 'MSC.pcu_import_upload_help'|trans }}</p>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="tl_formbody_submit">
+            <div class="tl_submit_container">
+                <button type="submit" name="source" value="upload" class="tl_submit">{{ 'MSC.pcu_import_preview'|trans }}</button>
+                {% if preset_file %}
+                    <button type="submit" name="source" value="file" class="tl_submit" formnovalidate>{{ 'MSC.pcu_import_load_file'|trans }}</button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    {% if preset_file %}
+        <p class="tl_info pcu-import-file">{{ 'MSC.pcu_import_file_found'|trans([preset_file]) }}</p>
+    {% endif %}
+{% endblock %}

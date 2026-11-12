@@ -23,3 +23,5 @@ $GLOBALS['TL_LANG']['tl_pcu_class_group']['targetOptions'] = [
     'event' => 'Events',
 ];
 $GLOBALS['TL_LANG']['tl_pcu_class_group']['invalidAlias'] = 'Der Alias darf nur Kleinbuchstaben, Ziffern, Bindestriche und Unterstriche enthalten.';
+$GLOBALS['TL_LANG']['tl_pcu_class_group']['pcuImport'] = ['Importieren', 'CSS-Klassen aus einer JSON-Datei importieren'];
+$GLOBALS['TL_LANG']['tl_pcu_class_group']['pcuExport'] = ['Exportieren', 'CSS-Klassen als JSON-Datei exportieren'];

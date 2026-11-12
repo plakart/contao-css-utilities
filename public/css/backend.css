@@ -14,3 +14,17 @@
 .pcu-class-selection__group > .tl_select_wrapper {
     width: 100%;
 }
+
+.pcu-tree legend label {
+    cursor: pointer;
+}
+
+.pcu-tree ul {
+    margin: 0;
+    padding: 5px 0 10px 25px;
+    list-style: none;
+}
+
+.pcu-tree li {
+    margin: 4px 0;
+}

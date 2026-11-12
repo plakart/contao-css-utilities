@@ -1,0 +1,52 @@
+{% extends '@Contao/be_main.html.twig' %}
+{% trans_default_domain 'contao_default' %}
+
+{% block main_content %}
+    <div id="tl_buttons">
+        <a href="{{ path('plakart_css_utilities_import') }}" class="header_back" accesskey="b">{{ 'MSC.backBT'|trans }}</a>
+    </div>
+
+    {% if not plan.hasChanges() %}
+        <p class="tl_info">{{ 'MSC.pcu_import_nothing_new'|trans }}</p>
+    {% endif %}
+
+    <form method="post" action="{{ path('plakart_css_utilities_import') }}" class="tl_form" data-turbo="false">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+        <input type="hidden" name="step" value="apply">
+        <input type="hidden" name="json" value="{{ json }}">
+
+        <div class="tl_formbody_edit">
+            {% for item in plan.groups %}
+                {% set group = item.group %}
+                <fieldset class="tl_box pcu-tree">
+                    <legend>
+                        <label>
+                            <input type="checkbox" class="tl_checkbox" name="groups[]" value="{{ group.alias }}"{{ item.isNew ? ' checked' : ' disabled' }}>
+                            {{ group.title }} <span class="tl_gray">[{{ group.alias }}]</span>
+                            {% if not item.isNew %}<span class="tl_gray">– {{ 'MSC.pcu_import_exists'|trans }}</span>{% endif %}
+                        </label>
+                    </legend>
+                    <ul>
+                        {% for entry in item.classes %}
+                            <li>
+                                <label>
+                                    <input type="checkbox" class="tl_checkbox" name="classes[{{ group.alias }}][]" value="{{ entry.class.class }}"{{ entry.isNew ? ' checked' : ' disabled' }}>
+                                    {{ entry.class.label }} <code>.{{ entry.class.class|replace({' ': ' .'}) }}</code>
+                                    {% if not entry.isNew %}<span class="tl_gray">– {{ 'MSC.pcu_import_exists'|trans }}</span>{% endif %}
+                                </label>
+                            </li>
+                        {% else %}
+                            <li class="tl_gray">{{ 'MSC.pcu_no_classes'|trans }}</li>
+                        {% endfor %}
+                    </ul>
+                </fieldset>
+            {% endfor %}
+        </div>
+
+        <div class="tl_formbody_submit">
+            <div class="tl_submit_container">
+                <button type="submit" class="tl_submit"{{ plan.hasChanges() ? '' : ' disabled' }}>{{ 'MSC.pcu_import_apply'|trans }}</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

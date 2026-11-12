@@ -18,9 +18,8 @@ class PresetExporter
     }
 
     /**
-     * Without arguments everything is exported. Otherwise the preset contains the
-     * given groups (with all their classes unless $classIds is given) plus the groups
-     * of the given classes; of those only the given classes.
+     * $groupIds limits the groups (null = all), $classIds limits the classes of
+     * those groups (null = all classes of the exported groups).
      *
      * @param list<int>|null $groupIds
      * @param list<int>|null $classIds
@@ -39,14 +38,12 @@ class PresetExporter
             $classesByGroup[(int) $row['pid']][] = new PresetClass((string) $row['cssClass'], (string) $row['label'], (bool) $row['published']);
         }
 
-        if (null === $groupIds && null === $classIds) {
+        if (null === $groupIds) {
             $groupRows = $this->connection->fetchAllAssociative('SELECT * FROM tl_pcu_class_group ORDER BY title, id');
         } else {
-            $ids = null === $classIds ? (array) $groupIds : array_values(array_unique([...($groupIds ?? []), ...array_keys($classesByGroup)]));
-
-            $groupRows = $this->connection->fetchAllAssociative(
+            $groupRows = [] === $groupIds ? [] : $this->connection->fetchAllAssociative(
                 'SELECT * FROM tl_pcu_class_group WHERE id IN (?) ORDER BY title, id',
-                [$ids],
+                [$groupIds],
                 [ArrayParameterType::INTEGER],
             );
         }

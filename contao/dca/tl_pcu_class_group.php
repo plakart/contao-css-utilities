@@ -31,6 +31,18 @@ $GLOBALS['TL_DCA']['tl_pcu_class_group'] = [
             'fields' => ['title', 'alias'],
             'format' => '%s <span class="tl_gray">[%s]</span>',
         ],
+        'global_operations' => [
+            'all',
+            '-',
+            'pcuImport' => [
+                'route' => Plakart\CssUtilitiesBundle\Controller\Backend\ImportController::ROUTE,
+                'icon' => 'theme_import.svg',
+            ],
+            'pcuExport' => [
+                'route' => Plakart\CssUtilitiesBundle\Controller\Backend\ExportController::ROUTE,
+                'icon' => 'theme_export.svg',
+            ],
+        ],
     ],
     'palettes' => [
         'default' => '{title_legend},title,alias,multiple;{target_legend},targets;{publish_legend},published',
