@@ -2,6 +2,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            $bundles: '%kernel.bundles%'
 
     Plakart\CssUtilitiesBundle\:
         resource: '../src/'
@@ -9,3 +11,4 @@ services:
             - '../src/ContaoManager/'
             - '../src/Util/'
             - '../src/PlakartCssUtilitiesBundle.php'
+            - '../src/Target/Target.php'
