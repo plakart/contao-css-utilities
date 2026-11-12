@@ -129,7 +129,7 @@ class ClassGroupListener
         }
 
         // activeRecord holds the values submitted in this request (title is saved before alias)
-        $title = trim((string) ($dc->activeRecord?->title ?? $dc->getCurrentRecord()['title'] ?? ''));
+        $title = trim((string) ($dc->activeRecord->title ?? $dc->getCurrentRecord()['title'] ?? ''));
 
         return $this->slug->generate(
             '' !== $title ? $title : 'group',
