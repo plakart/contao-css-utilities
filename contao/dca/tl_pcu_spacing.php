@@ -31,6 +31,7 @@ $GLOBALS['TL_DCA']['tl_pcu_spacing'] = [
             'pcuGroups' => [
                 'href' => 'table=tl_pcu_class_group',
                 'icon' => 'back.svg',
+                'primary' => true,
             ],
             'all',
         ],
@@ -48,7 +49,8 @@ $GLOBALS['TL_DCA']['tl_pcu_spacing'] = [
         'step' => [
             'inputType' => 'text',
             'eval' => ['mandatory' => true, 'rgxp' => 'natural', 'unique' => true, 'doNotCopy' => true, 'maxlength' => 6, 'tl_class' => 'w50'],
-            'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
+            // NULL instead of 0, so a new record shows an empty field
+            'sql' => ['type' => 'integer', 'unsigned' => true, 'notnull' => false],
         ],
         'label' => [
             'search' => true,
