@@ -113,7 +113,7 @@ class ClassGroupRepository implements ResetInterface
                 (string) $row['alias'],
                 (string) $row['title'],
                 (bool) $row['multiple'],
-                self::targets($row),
+                self::targetsFromRow($row),
                 $classes[$id],
             );
         }
@@ -126,7 +126,7 @@ class ClassGroupRepository implements ResetInterface
      *
      * @return array<string, list<string>>
      */
-    private static function targets(array $row): array
+    public static function targetsFromRow(array $row): array
     {
         $targets = [];
 

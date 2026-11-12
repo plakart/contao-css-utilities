@@ -20,6 +20,7 @@ services:
             - '../src/Preset/PresetClass.php'
             - '../src/Preset/PresetSerializer.php'
             - '../src/Preset/InvalidPresetException.php'
+            - '../src/Preset/ImportPlan.php'
 
     Plakart\CssUtilitiesBundle\Target\TargetRegistry:
         public: true
