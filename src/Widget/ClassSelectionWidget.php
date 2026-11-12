@@ -22,6 +22,8 @@ class ClassSelectionWidget extends Widget
 {
     public const STYLESHEET = 'bundles/plakartcssutilities/css/backend.css|static';
 
+    public const SCRIPT = 'bundles/plakartcssutilities/js/class-select.js|static';
+
     protected $blnSubmitInput = true;
 
     protected $strTemplate = 'be_widget';
@@ -42,6 +44,7 @@ class ClassSelectionWidget extends Widget
     public function generate(): string
     {
         $GLOBALS['TL_CSS'][] = self::STYLESHEET;
+        $GLOBALS['TL_JAVASCRIPT'][] = self::SCRIPT;
 
         $selection = SelectionNormalizer::normalize($this->varValue, $this->getGroups());
         $html = [];
@@ -82,22 +85,16 @@ class ClassSelectionWidget extends Widget
             );
         }
 
-        if ($group->multiple) {
-            $select = \sprintf(
-                '<input type="hidden" name="%s" value=""><div class="tl_select_wrapper" data-controller="contao--choices"><select name="%s[]" id="ctrl_%s" class="tl_mselect" multiple data-action="focus->contao--scroll-offset#store">%s</select></div>',
-                $name,
-                $name,
-                $id,
-                implode('', $options),
-            );
-        } else {
-            $select = \sprintf(
-                '<select name="%s" id="ctrl_%s" class="tl_select" data-action="focus->contao--scroll-offset#store">%s</select>',
-                $name,
-                $id,
-                implode('', $options),
-            );
-        }
+        $select = \sprintf(
+            '%s<pcu-class-select class="tl_select_wrapper" data-search-placeholder="%s"><select name="%s" id="ctrl_%s" class="%s"%s data-action="focus->contao--scroll-offset#store">%s</select></pcu-class-select>',
+            $group->multiple ? \sprintf('<input type="hidden" name="%s" value="">', $name) : '',
+            StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pcu_search_placeholder'] ?? ''),
+            $group->multiple ? $name.'[]' : $name,
+            $id,
+            $group->multiple ? 'tl_mselect' : 'tl_select',
+            $group->multiple ? ' multiple' : '',
+            implode('', $options),
+        );
 
         return \sprintf(
             '<div class="pcu-class-selection__group"><label for="ctrl_%s">%s</label>%s</div>',

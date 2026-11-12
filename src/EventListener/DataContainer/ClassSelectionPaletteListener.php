@@ -21,7 +21,7 @@ use Plakart\CssUtilitiesBundle\Util\UtilityFields;
  */
 class ClassSelectionPaletteListener
 {
-    public const LEGEND = 'pcu_classes_legend';
+    public const LEGEND = UtilityPaletteListener::LEGEND;
 
     public function __construct(
         private readonly TargetRegistry $targets,
@@ -50,8 +50,9 @@ class ClassSelectionPaletteListener
             return;
         }
 
+        // Tables with spacing fields already have the legend; the class selection follows them
         $manipulator = PaletteManipulator::create()
-            ->addLegend(self::LEGEND, $hasUtilities ? 'utility_legend' : 'expert_legend', PaletteManipulator::POSITION_BEFORE, true)
+            ->addLegend(self::LEGEND, 'expert_legend', PaletteManipulator::POSITION_BEFORE, true)
             ->addField(LoadDataContainerListener::FIELD, self::LEGEND, PaletteManipulator::POSITION_APPEND)
         ;
 

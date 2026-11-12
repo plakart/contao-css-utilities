@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-$GLOBALS['TL_LANG']['tl_content']['utility_legend'] = 'Spacing utilities';
 $GLOBALS['TL_LANG']['tl_content']['utilityMt'] = ['Margin top (margin-top)', 'Adds the corresponding mt-* class (scale 0-12).'];
 $GLOBALS['TL_LANG']['tl_content']['utilityMb'] = ['Margin bottom (margin-bottom)', 'Adds the corresponding mb-* class (scale 0-12).'];
 $GLOBALS['TL_LANG']['tl_content']['utilityPt'] = ['Padding top (padding-top)', 'Adds the corresponding pt-* class (scale 0-12).'];

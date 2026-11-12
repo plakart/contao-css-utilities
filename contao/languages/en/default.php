@@ -32,3 +32,4 @@ $GLOBALS['TL_LANG']['MSC']['pcu_field_multiple'] = 'Multiple choice';
 $GLOBALS['TL_LANG']['MSC']['pcu_field_targets'] = 'Show in';
 $GLOBALS['TL_LANG']['MSC']['pcu_field_published'] = 'Published';
 $GLOBALS['TL_LANG']['MSC']['pcu_field_label'] = 'Label';
+$GLOBALS['TL_LANG']['MSC']['pcu_search_placeholder'] = 'Search by name or CSS class';

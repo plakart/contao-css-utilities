@@ -16,11 +16,13 @@ final class ClassSelectionWidgetTest extends ContaoTestCase
         parent::setUp();
 
         System::setContainer($this->getContainerWithContaoConfiguration());
+
+        $GLOBALS['TL_LANG']['MSC']['pcu_search_placeholder'] = 'Search';
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_CSS']);
+        unset($GLOBALS['TL_CSS'], $GLOBALS['TL_JAVASCRIPT'], $GLOBALS['TL_LANG']);
 
         parent::tearDown();
     }
@@ -30,17 +32,17 @@ final class ClassSelectionWidgetTest extends ContaoTestCase
         $html = $this->createWidget(serialize(['buttons' => ['btn-b'], 'spacing' => ['s1', 's2']]))->generate();
 
         self::assertStringContainsString('<label for="ctrl_pcuClasses_buttons">Buttons &amp; links</label>', $html);
-        self::assertStringContainsString('<select name="pcuClasses[buttons]" id="ctrl_pcuClasses_buttons" class="tl_select"', $html);
+        self::assertStringContainsString('<pcu-class-select class="tl_select_wrapper" data-search-placeholder="Search"><select name="pcuClasses[buttons]" id="ctrl_pcuClasses_buttons" class="tl_select" data-action', $html);
         self::assertStringContainsString('<option value="">-</option>', $html);
         self::assertStringContainsString('<option value="btn-a">A</option>', $html);
         self::assertStringContainsString('<option value="btn-b" selected>B</option>', $html);
 
         self::assertStringContainsString('<input type="hidden" name="pcuClasses[spacing]" value="">', $html);
-        self::assertStringContainsString('data-controller="contao--choices"', $html);
         self::assertStringContainsString('<select name="pcuClasses[spacing][]" id="ctrl_pcuClasses_spacing" class="tl_mselect" multiple', $html);
         self::assertStringContainsString('<option value="s1" selected>S1</option><option value="s2" selected>S2</option>', $html);
 
         self::assertSame([ClassSelectionWidget::STYLESHEET], $GLOBALS['TL_CSS']);
+        self::assertSame([ClassSelectionWidget::SCRIPT], $GLOBALS['TL_JAVASCRIPT']);
     }
 
     public function testEscapesLabelsAndClasses(): void

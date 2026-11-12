@@ -254,3 +254,8 @@ groups/classes (all preselected) → JSON download
 - Import can update existing records on request: the preview lists the
   differences of existing groups and classes, each with an unchecked "update"
   checkbox. Without it, existing records stay unchanged (as before).
+- Spacing fields and class selection share one legend `pcu_classes_legend`
+  ("CSS classes"), spacing fields first.
+- Class selects are searchable (label and CSS class) via the custom element
+  `<pcu-class-select>` and Contao's global Choices.js, independent of the number of
+  options.

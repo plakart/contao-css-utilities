@@ -57,6 +57,9 @@ In **Layout → CSS classes** you create groups, and classes within each group.
 A class can consist of several classes separated by spaces (`btn btn-primary`).
 Groups appear in alphabetical order, classes in the order of the list.
 
+In the edit form the spacing fields and the class selects share the legend "CSS
+classes". The class selects are searchable by label and by CSS class name.
+
 ### How classes reach the front end
 
 On save, the selected classes are written into the record's CSS class field

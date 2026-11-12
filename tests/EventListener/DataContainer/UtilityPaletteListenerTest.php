@@ -37,7 +37,7 @@ final class UtilityPaletteListenerTest extends TestCase
         foreach (['text', 'image'] as $palette) {
             $value = $GLOBALS['TL_DCA']['tl_content']['palettes'][$palette];
 
-            self::assertStringContainsString('{utility_legend:hide}', $value);
+            self::assertStringContainsString('{pcu_classes_legend:hide}', $value);
             self::assertStringContainsString('utilityMt,utilityMb,utilityPt,utilityPb', $value);
         }
 

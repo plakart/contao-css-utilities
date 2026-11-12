@@ -12,6 +12,7 @@
 
 .pcu-class-selection__group > select,
 .pcu-class-selection__group > .tl_select_wrapper {
+    display: block;
     width: 100%;
 }
 

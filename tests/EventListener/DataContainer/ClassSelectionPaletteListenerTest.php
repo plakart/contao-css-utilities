@@ -49,14 +49,14 @@ final class ClassSelectionPaletteListenerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testAddsFieldBeforeSpacingLegendForMatchingType(): void
+    public function testAddsFieldAfterSpacingFieldsInTheSameLegend(): void
     {
         $this->connection->insert('tl_content', ['type' => 'hyperlink']);
 
         $this->invoke('tl_content', (int) $this->connection->lastInsertId());
 
         self::assertSame(
-            '{type_legend},type;{pcu_classes_legend:hide},pcuClasses;{utility_legend:hide},utilityMt,utilityMb,utilityPt,utilityPb;{expert_legend:hide},cssID',
+            '{type_legend},type;{pcu_classes_legend:hide},utilityMt,utilityMb,utilityPt,utilityPb,pcuClasses;{expert_legend:hide},cssID',
             $GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink'],
         );
         self::assertSame(['addImage'], $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__']);
@@ -69,7 +69,7 @@ final class ClassSelectionPaletteListenerTest extends TestCase
         $this->invoke('tl_content', (int) $this->connection->lastInsertId());
 
         self::assertSame(
-            '{type_legend},type;{utility_legend:hide},utilityMt,utilityMb,utilityPt,utilityPb;{expert_legend:hide},cssID',
+            '{type_legend},type;{pcu_classes_legend:hide},utilityMt,utilityMb,utilityPt,utilityPb;{expert_legend:hide},cssID',
             $GLOBALS['TL_DCA']['tl_content']['palettes']['text'],
         );
     }
