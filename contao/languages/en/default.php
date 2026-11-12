@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$GLOBALS['TL_LANG']['MSC']['pcuClasses'] = ['CSS classes', 'Select the CSS classes for this record. They are added to its CSS class field on save.'];
+$GLOBALS['TL_LANG']['MSC']['pcuClasses'] = ['Style selection', 'Select styles for this record. Their classes are added to its CSS class field on save.'];
 
 $GLOBALS['TL_LANG']['MSC']['pcu_import_headline'] = 'Import CSS classes';
 $GLOBALS['TL_LANG']['MSC']['pcu_import_upload_legend'] = 'Preset file';

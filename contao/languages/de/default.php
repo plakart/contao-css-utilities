@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$GLOBALS['TL_LANG']['MSC']['pcuClasses'] = ['CSS-Klassen', 'CSS-Klassen für diesen Datensatz auswählen. Sie werden beim Speichern in das Feld „CSS-Klasse“ übernommen.'];
+$GLOBALS['TL_LANG']['MSC']['pcuClasses'] = ['Stil-Auswahl', 'Stile für diesen Datensatz auswählen. Die Klassen werden beim Speichern in das Feld „CSS-Klasse“ übernommen.'];
 
 $GLOBALS['TL_LANG']['MSC']['pcu_import_headline'] = 'CSS-Klassen importieren';
 $GLOBALS['TL_LANG']['MSC']['pcu_import_upload_legend'] = 'Vorlagen-Datei';
