@@ -4,6 +4,7 @@ services:
         autoconfigure: true
         bind:
             $bundles: '%kernel.bundles%'
+            $presetFile: '%plakart_css_utilities.preset_file%'
 
     Plakart\CssUtilitiesBundle\:
         resource: '../src/'
