@@ -1,7 +1,7 @@
 # Design: CSS class selection (version 2.0)
 
 Date: 2026-11-12
-Status: draft
+Status: implemented (2.0)
 
 ## Purpose
 
@@ -25,7 +25,7 @@ migration and offers a back-end import/export for later updates.
 | Spacing utilities | Unchanged: four dedicated select fields + shipped `utilities.css` on `tl_content`, `tl_article`, `tl_form_field` |
 | Class source | Database, editable in a new back-end module "CSS classes" (section Layout/design) |
 | Data model | Group (`tl_pcu_class_group`) → classes (`tl_pcu_class`) |
-| Group settings | Title, alias (stable key), single or multiple choice, targets, optional type restriction per target, published |
+| Group settings | Title, alias (stable key), single or multiple choice, targets, optional type restriction per target, published. Groups are listed alphabetically (Contao has no drag sorting for top-level tables in list mode) |
 | Targets | `content` (tl_content.cssID), `article` (tl_article.cssID), `form_field` (tl_form_field.class), `module` (tl_module.cssID), `page` (tl_page.cssClass), `news` (tl_news.cssClass, only with `contao/news-bundle`), `event` (tl_calendar_events.cssClass, only with `contao/calendar-bundle`) |
 | Type restriction | `content`, `module` and `form_field` can be restricted to element/module/field types; empty = all types |
 | Not supported | FAQ (no CSS class column in core) |
@@ -234,3 +234,18 @@ groups/classes (all preselected) → JSON download
 - Manual check on a Contao 6 (`~/projects/contao6`) and a Contao 5.7
   installation: install, migration import, editing, front-end output in classic
   and modern layouts, import/export round trip.
+
+## Changes during implementation
+
+- Groups are ordered by title, not by a manual sorting field.
+- The class selection gets its own legend `pcu_classes_legend`, placed before the
+  spacing legend (or before `expert_legend` on tables without spacing).
+  `ClassSelectionPaletteListener` also applies the spacing fields, so the order does
+  not depend on callback priorities; `UtilityClassSaveListener` was merged into
+  `ClassAttributeListener`.
+- Export selection: only checked groups are exported, and of those only the
+  checked classes. Import selection: new groups need their own checkbox; existing
+  groups only receive their checked new classes.
+- Back-end templates need `contao/templates/.twig-root`.
+- Found while testing on Contao 6: the card-header wrapper crashed on the
+  `RecordLabel` returned by the core label callback (also affects 1.1.0).

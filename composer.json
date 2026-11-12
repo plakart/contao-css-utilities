@@ -1,6 +1,6 @@
 {
     "name": "plakart/contao-css-utilities",
-    "description": "Tailwind-style spacing utility classes assignable to Contao content elements, articles and form fields",
+    "description": "Spacing utilities and a back-end managed CSS class selection for Contao editors",
     "type": "contao-bundle",
     "license": "LGPL-3.0-or-later",
     "require": {
