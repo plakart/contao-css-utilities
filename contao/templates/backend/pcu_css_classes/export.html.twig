@@ -6,7 +6,7 @@
         <a href="{{ path('contao_backend', {do: 'pcu_css_classes'}) }}" class="header_back" accesskey="b">{{ 'MSC.backBT'|trans }}</a>
     </div>
 
-    {% if groups is empty %}
+    {% if groups is empty and spacing is empty %}
         <p class="tl_info">{{ 'MSC.pcu_export_empty'|trans }}</p>
     {% else %}
         <form method="post" class="tl_form" data-turbo="false">
@@ -36,6 +36,21 @@
                         </ul>
                     </fieldset>
                 {% endfor %}
+                {% if spacing is not empty %}
+                    <fieldset class="tl_box pcu-tree">
+                        <legend>{{ 'MSC.pcu_spacing_legend'|trans }}</legend>
+                        <ul>
+                            {% for step in spacing %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" class="tl_checkbox" name="spacing[]" value="{{ step.step }}" checked>
+                                        {{ step.step }}{% if step.label %} – {{ step.label }}{% endif %}
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </fieldset>
+                {% endif %}
             </div>
 
             <div class="tl_formbody_submit">

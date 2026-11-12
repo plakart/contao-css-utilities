@@ -25,3 +25,4 @@ $GLOBALS['TL_LANG']['tl_pcu_class_group']['targetOptions'] = [
 $GLOBALS['TL_LANG']['tl_pcu_class_group']['invalidAlias'] = 'Der Alias darf nur Kleinbuchstaben, Ziffern, Bindestriche und Unterstriche enthalten.';
 $GLOBALS['TL_LANG']['tl_pcu_class_group']['pcuImport'] = ['Importieren', 'CSS-Klassen aus einer JSON-Datei importieren'];
 $GLOBALS['TL_LANG']['tl_pcu_class_group']['pcuExport'] = ['Exportieren', 'CSS-Klassen als JSON-Datei exportieren'];
+$GLOBALS['TL_LANG']['tl_pcu_class_group']['pcuSpacing'] = ['Zusätzliche Abstände', 'Zusätzliche Abstandsstufen (ab 13) verwalten'];

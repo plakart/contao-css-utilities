@@ -25,3 +25,4 @@ $GLOBALS['TL_LANG']['tl_pcu_class_group']['targetOptions'] = [
 $GLOBALS['TL_LANG']['tl_pcu_class_group']['invalidAlias'] = 'The alias may only contain lowercase letters, digits, hyphens and underscores.';
 $GLOBALS['TL_LANG']['tl_pcu_class_group']['pcuImport'] = ['Import', 'Import CSS classes from a JSON file'];
 $GLOBALS['TL_LANG']['tl_pcu_class_group']['pcuExport'] = ['Export', 'Export CSS classes as a JSON file'];
+$GLOBALS['TL_LANG']['tl_pcu_class_group']['pcuSpacing'] = ['Additional spacing', 'Manage additional spacing steps (13+)'];

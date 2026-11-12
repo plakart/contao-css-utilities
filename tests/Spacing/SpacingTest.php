@@ -34,7 +34,7 @@ final class SpacingTest extends TestCase
         $connection = self::createConnection();
         $connection->executeStatement('DROP TABLE tl_pcu_spacing');
 
-        self::assertSame([], (new SpacingStepRepository($connection))->findAll());
+        self::assertSame([], new SpacingStepRepository($connection)->findAll());
     }
 
     public function testStepValidation(): void

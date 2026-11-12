@@ -83,14 +83,21 @@ class ImportController extends AbstractBackendController
         }
 
         $preset = PresetSerializer::fromJson($json);
-        $result = $this->importer->apply($preset, self::selection($this->importer->plan($preset), $request), self::updates($request));
+        $result = $this->importer->apply(
+            $preset,
+            self::selection($this->importer->plan($preset), $request),
+            self::updates($request),
+            self::steps($request, 'spacing'),
+        );
 
         Message::addConfirmation(\sprintf(
             $this->lang('pcu_import_done'),
             $result['groups'],
             $result['classes'],
+            $result['spacing'],
             $result['updatedGroups'],
             $result['updatedClasses'],
+            $result['updatedSpacing'],
         ));
 
         return new RedirectResponse($this->generateUrl('contao_backend', ['do' => 'pcu_css_classes']), Response::HTTP_SEE_OTHER);
@@ -119,7 +126,7 @@ class ImportController extends AbstractBackendController
     }
 
     /**
-     * @return array{groups: list<string>, classes: array<string, list<string>>}
+     * @return array{groups: list<string>, classes: array<string, list<string>>, spacing: list<int>}
      */
     private static function updates(Request $request): array
     {
@@ -134,7 +141,16 @@ class ImportController extends AbstractBackendController
         return [
             'groups' => array_values(array_map(strval(...), $request->request->all('updateGroups'))),
             'classes' => $classes,
+            'spacing' => self::steps($request, 'updateSpacing'),
         ];
+    }
+
+    /**
+     * @return list<int>
+     */
+    private static function steps(Request $request, string $key): array
+    {
+        return array_values(array_map(intval(...), $request->request->all($key)));
     }
 
     private function readSource(Request $request): string

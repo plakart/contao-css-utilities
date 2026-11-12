@@ -259,3 +259,8 @@ groups/classes (all preselected) → JSON download
 - Class selects are searchable (label and CSS class) via the custom element
   `<pcu-class-select>` and Contao's global Choices.js, independent of the number of
   options.
+- Additional spacing steps: table `tl_pcu_spacing` (whole numbers from 13, optional
+  label), shown in the spacing selects after 0–12. The theme provides their CSS; the
+  edit view shows a snippet. Numeric spacing classes (`(mt|mb|pt|pb)-\d+`) are always
+  replaced on save, so deleted steps disappear. The preset format has an optional
+  `spacing` list; the install migration runs only while both groups and steps are empty.

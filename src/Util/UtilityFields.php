@@ -29,7 +29,8 @@ final class UtilityFields
                 'exclude' => true,
                 'inputType' => 'select',
                 'options_callback' => [SpacingOptionsListener::class, '__invoke'],
-                'eval' => ['includeBlankOption' => true, 'tl_class' => 'w25'],
+                // The keys 0..n are sequential, so Contao would otherwise use the labels as values
+                'eval' => ['includeBlankOption' => true, 'isAssociative' => true, 'tl_class' => 'w25'],
                 'sql' => ['type' => 'string', 'length' => 8, 'default' => ''],
             ];
         }

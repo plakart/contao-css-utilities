@@ -11,14 +11,28 @@ namespace Plakart\CssUtilitiesBundle\Preset;
  * @phpstan-type Change array{field: string, old: string, new: string}
  * @phpstan-type ClassItem array{class: PresetClass, isNew: bool, changes: list<Change>}
  * @phpstan-type GroupItem array{group: PresetGroup, isNew: bool, changes: list<Change>, classes: list<ClassItem>}
+ * @phpstan-type SpacingItem array{step: PresetSpacingStep, isNew: bool, changes: list<Change>}
  */
 final readonly class ImportPlan
 {
     /**
-     * @param list<GroupItem> $groups
+     * @param list<GroupItem>   $groups
+     * @param list<SpacingItem> $spacing
      */
-    public function __construct(public array $groups)
+    public function __construct(
+        public array $groups,
+        public array $spacing = [],
+    ) {
+    }
+
+    public function countNewSpacing(): int
     {
+        return \count(array_filter($this->spacing, static fn (array $step): bool => $step['isNew']));
+    }
+
+    public function countChangedSpacing(): int
+    {
+        return \count(array_filter($this->spacing, static fn (array $step): bool => [] !== $step['changes']));
     }
 
     public function countNewGroups(): int
@@ -43,7 +57,8 @@ final readonly class ImportPlan
 
     public function hasChanges(): bool
     {
-        return $this->countNewGroups() + $this->countNewClasses() + $this->countChangedGroups() + $this->countChangedClasses() > 0;
+        return $this->countNewGroups() + $this->countNewClasses() + $this->countChangedGroups() + $this->countChangedClasses()
+            + $this->countNewSpacing() + $this->countChangedSpacing() > 0;
     }
 
     /**

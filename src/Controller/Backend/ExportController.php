@@ -36,6 +36,7 @@ class ExportController extends AbstractBackendController
             $preset = $this->exporter->export(
                 self::ids($request->request->all('groups')),
                 self::ids($request->request->all('classes')),
+                self::ids($request->request->all('spacing')),
             );
 
             $response = new Response(PresetSerializer::toJson($preset));
@@ -54,6 +55,7 @@ class ExportController extends AbstractBackendController
             'headline' => $this->translator->trans('MSC.pcu_export_headline', [], 'contao_default'),
             'title' => $this->translator->trans('MSC.pcu_export_headline', [], 'contao_default'),
             'groups' => $this->loadTree(),
+            'spacing' => $this->connection->fetchAllAssociative('SELECT step, label FROM tl_pcu_spacing ORDER BY step'),
         ]);
     }
 

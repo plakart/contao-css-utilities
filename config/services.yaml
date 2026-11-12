@@ -22,6 +22,7 @@ services:
             - '../src/Preset/PresetSerializer.php'
             - '../src/Preset/InvalidPresetException.php'
             - '../src/Preset/ImportPlan.php'
+            - '../src/Preset/PresetSpacingStep.php'
 
     Plakart\CssUtilitiesBundle\Target\TargetRegistry:
         public: true

@@ -52,20 +52,36 @@ class PresetImporter
             ];
         }
 
-        return new ImportPlan($groups);
+        $existingSpacing = $this->loadExistingSpacing();
+        $spacing = [];
+
+        foreach ($preset->spacing as $step) {
+            $label = $existingSpacing[$step->step] ?? null;
+
+            $spacing[] = [
+                'step' => $step,
+                'isNew' => null === $label,
+                'changes' => null === $label || $label === $step->label ? [] : [['field' => 'label', 'old' => $label, 'new' => $step->label]],
+            ];
+        }
+
+        return new ImportPlan($groups, $spacing);
     }
 
     /**
-     * @param array<string, list<string>>|null                                         $selection group alias => new CSS classes to import; null = everything new
-     * @param array{groups?: list<string>, classes?: array<string, list<string>>}|null $updates   existing groups (aliases) and classes (alias => CSS classes) to overwrite with the preset values
+     * @param array<string, list<string>>|null                                                              $selection        group alias => new CSS classes to import; null = everything new
+     * @param array{groups?: list<string>, classes?: array<string, list<string>>, spacing?: list<int>}|null $updates          existing groups (aliases), classes (alias => CSS classes) and spacing steps to overwrite with the preset values
+     * @param list<int>|null                                                                                $spacingSelection new spacing steps to import; null = all new ones
      *
-     * @return array{groups: int, classes: int, updatedGroups: int, updatedClasses: int}
+     * @return array{groups: int, classes: int, spacing: int, updatedGroups: int, updatedClasses: int, updatedSpacing: int}
      */
-    public function apply(Preset $preset, ?array $selection = null, ?array $updates = null): array
+    public function apply(Preset $preset, ?array $selection = null, ?array $updates = null, ?array $spacingSelection = null): array
     {
-        return $this->connection->transactional(function () use ($preset, $selection, $updates): array {
+        return $this->connection->transactional(function () use ($preset, $selection, $updates, $spacingSelection): array {
             $existing = $this->loadExisting();
-            $result = ['groups' => 0, 'classes' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0];
+            $result = ['groups' => 0, 'classes' => 0, 'spacing' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0, 'updatedSpacing' => 0];
+
+            $this->applySpacing($preset, $spacingSelection, $updates['spacing'] ?? [], $result);
 
             foreach ($preset->groups as $group) {
                 $existingGroup = $existing[$group->alias] ?? null;
@@ -97,6 +113,46 @@ class PresetImporter
 
             return $result;
         });
+    }
+
+    /**
+     * @param list<int>|null     $selection
+     * @param list<int>          $updates
+     * @param array<string, int> $result
+     */
+    private function applySpacing(Preset $preset, ?array $selection, array $updates, array &$result): void
+    {
+        $existing = $this->loadExistingSpacing();
+
+        foreach ($preset->spacing as $step) {
+            if (!isset($existing[$step->step])) {
+                if (null === $selection || \in_array($step->step, $selection, true)) {
+                    $this->connection->insert('tl_pcu_spacing', ['tstamp' => time(), 'step' => $step->step, 'label' => $step->label]);
+                    ++$result['spacing'];
+                }
+
+                continue;
+            }
+
+            if ($existing[$step->step] !== $step->label && \in_array($step->step, $updates, true)) {
+                $this->connection->update('tl_pcu_spacing', ['tstamp' => time(), 'label' => $step->label], ['step' => $step->step]);
+                ++$result['updatedSpacing'];
+            }
+        }
+    }
+
+    /**
+     * @return array<int, string> step => label
+     */
+    private function loadExistingSpacing(): array
+    {
+        $steps = [];
+
+        foreach ($this->connection->fetchAllAssociative('SELECT step, label FROM tl_pcu_spacing') as $row) {
+            $steps[(int) $row['step']] = (string) $row['label'];
+        }
+
+        return $steps;
     }
 
     /**

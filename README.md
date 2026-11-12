@@ -39,6 +39,32 @@ Override the scale in your theme after `utilities.css` is loaded:
 }
 ```
 
+### Additional spacing steps
+
+The steps 0–12 are fixed and ship with CSS. Override their values in your theme via
+the `--pcu-space-*` variables.
+
+For more steps, open **Layout → CSS classes → Additional spacing** and add whole
+numbers from 13. They appear in all four spacing selects right away. **The bundle
+does not ship CSS for them** — the edit view shows a snippet to copy into your theme
+(e.g. `spacings.css`):
+
+```css
+html:root {
+  --pcu-space-13: 20rem;
+}
+
+.mt-13 { margin-top: var(--pcu-space-13) !important; }
+.mb-13 { margin-bottom: var(--pcu-space-13) !important; }
+.pt-13 { padding-top: var(--pcu-space-13) !important; }
+.pb-13 { padding-bottom: var(--pcu-space-13) !important; }
+```
+
+Classes of the form `mt-<number>`, `mb-<number>`, `pt-<number>` and `pb-<number>` are
+managed by the bundle: on save they are replaced by the current selection, even for
+deleted steps. A record that still uses a deleted step shows it as "unknown option"
+until another value is chosen.
+
 ## CSS class selection
 
 ### Groups and classes

@@ -46,7 +46,7 @@ final class PresetFileMigrationTest extends TestCase
         $result = $migration->run();
 
         self::assertTrue($result->isSuccessful());
-        self::assertStringContainsString('Imported 2 CSS class groups and 3 classes', $result->getMessage());
+        self::assertStringContainsString('Imported 2 CSS class groups, 3 classes and 0 additional spacing steps', $result->getMessage());
         self::assertFalse($migration->shouldRun());
     }
 

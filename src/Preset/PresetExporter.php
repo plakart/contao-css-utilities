@@ -21,10 +21,13 @@ class PresetExporter
      * $groupIds limits the groups (null = all), $classIds limits the classes of
      * those groups (null = all classes of the exported groups).
      *
+     * $steps limits the additional spacing steps (null = all).
+     *
      * @param list<int>|null $groupIds
      * @param list<int>|null $classIds
+     * @param list<int>|null $steps
      */
-    public function export(?array $groupIds = null, ?array $classIds = null): Preset
+    public function export(?array $groupIds = null, ?array $classIds = null, ?array $steps = null): Preset
     {
         $classRows = $this->connection->fetchAllAssociative('SELECT * FROM tl_pcu_class ORDER BY pid, sorting, id');
 
@@ -61,6 +64,14 @@ class PresetExporter
             );
         }
 
-        return new Preset($groups);
+        $spacing = [];
+
+        foreach ($this->connection->fetchAllAssociative('SELECT step, label FROM tl_pcu_spacing ORDER BY step') as $row) {
+            if (null === $steps || \in_array((int) $row['step'], $steps, true)) {
+                $spacing[] = new PresetSpacingStep((int) $row['step'], (string) $row['label']);
+            }
+        }
+
+        return new Preset($groups, $spacing);
     }
 }

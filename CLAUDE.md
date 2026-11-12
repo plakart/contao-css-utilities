@@ -18,6 +18,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **`PresetFileMigration::shouldRun()` must turn false after `run()`**, otherwise `contao:migrate` loops. Invalid or empty preset files never run.
 - **Modern (Twig) layouts skip the `generatePage` hook**; `utilities.css` is also added via `LayoutEvent`.
 - **Contao 6 returns `RecordLabel` from label callbacks**; `UtilityClassLabelListener` must keep supporting string, array and `RecordLabel` (the class does not exist in 5.7, PHPStan ignores it there).
+- **Spacing selects: fixed 0-12 plus `tl_pcu_spacing` (13+)**, options via `SpacingOptionsListener` with `eval.isAssociative` (keys 0..n are sequential, Contao would otherwise use the labels as values). Every `(mt|mb|pt|pb)-<number>` class is managed by the bundle and replaced on save; do not allow non-numeric step names.
 - **Back-end templates live in `contao/templates/` with a `.twig-root` marker**, otherwise Contao flattens `backend/pcu_css_classes/*` to `@Contao/*.html.twig`.
 - **Searchable selects use the custom element `<pcu-class-select>`** (`public/js/class-select.js`) with the global `Choices`: Contao's `contao--choices` controller only enables search for more than 7 options, and its Stimulus app is not reachable from bundles. The element must defer its init while the document is still loading (its `<select>` child is not parsed yet in `connectedCallback`).
 - **Back-end forms of the import/export use `data-turbo="false"`** (file download, non-redirect POST responses).

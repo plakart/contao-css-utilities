@@ -32,6 +32,8 @@ class SpacingListener
     #[AsCallback('tl_pcu_spacing', 'fields.cssSnippet.input_field')]
     public function cssSnippet(DataContainer $dc): string
     {
+        $GLOBALS['TL_CSS'][] = \Plakart\CssUtilitiesBundle\Widget\ClassSelectionWidget::STYLESHEET;
+
         $step = (int) ($dc->getCurrentRecord()['step'] ?? 0);
 
         return \sprintf(

@@ -14,10 +14,18 @@ final readonly class Preset
     public const VERSION = 1;
 
     /**
-     * @param list<PresetGroup> $groups
+     * @param list<PresetGroup>       $groups
+     * @param list<PresetSpacingStep> $spacing additional spacing steps (13+)
      */
-    public function __construct(public array $groups = [])
+    public function __construct(
+        public array $groups = [],
+        public array $spacing = [],
+    ) {
+    }
+
+    public function isEmpty(): bool
     {
+        return [] === $this->groups && [] === $this->spacing;
     }
 
     public function countClasses(): int

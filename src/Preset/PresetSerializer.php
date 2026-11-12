@@ -7,6 +7,7 @@ namespace Plakart\CssUtilitiesBundle\Preset;
 use Plakart\CssUtilitiesBundle\EventListener\DataContainer\ClassGroupListener;
 use Plakart\CssUtilitiesBundle\EventListener\DataContainer\ClassListener;
 use Plakart\CssUtilitiesBundle\Util\ClassAttributeMerger;
+use Plakart\CssUtilitiesBundle\Util\UtilityClasses;
 
 /**
  * Reads and writes the JSON preset format (see docs/preset-format.md).
@@ -56,7 +57,7 @@ final class PresetSerializer
             $result[] = $group;
         }
 
-        return new Preset($result);
+        return new Preset($result, self::parseSpacing($data['spacing'] ?? []));
     }
 
     public static function toJson(Preset $preset): string
@@ -89,12 +90,63 @@ final class PresetSerializer
             $groups[] = $data;
         }
 
+        $data = ['format' => Preset::FORMAT, 'version' => Preset::VERSION, 'groups' => $groups];
+
+        if ([] !== $preset->spacing) {
+            $data['spacing'] = array_map(
+                static fn (PresetSpacingStep $step): array => '' === $step->label ? ['step' => $step->step] : ['step' => $step->step, 'label' => $step->label],
+                $preset->spacing,
+            );
+        }
+
         $json = json_encode(
-            ['format' => Preset::FORMAT, 'version' => Preset::VERSION, 'groups' => $groups],
+            $data,
             \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_THROW_ON_ERROR,
         );
 
         return $json."\n";
+    }
+
+    /**
+     * @return list<PresetSpacingStep>
+     */
+    private static function parseSpacing(mixed $data): array
+    {
+        if (!\is_array($data) || !array_is_list($data)) {
+            throw InvalidPresetException::at('spacing', 'Expected a list.');
+        }
+
+        $steps = [];
+
+        foreach ($data as $i => $step) {
+            $path = \sprintf('spacing[%d]', $i);
+
+            if (!\is_array($step) || array_is_list($step)) {
+                throw InvalidPresetException::at($path, 'Expected an object.');
+            }
+
+            $number = $step['step'] ?? null;
+
+            if (!\is_int($number) || $number < UtilityClasses::FIRST_EXTRA_STEP) {
+                throw InvalidPresetException::at($path.'.step', \sprintf('Expected a whole number from %d.', UtilityClasses::FIRST_EXTRA_STEP));
+            }
+
+            if (isset($steps[$number])) {
+                throw InvalidPresetException::at($path.'.step', \sprintf('Duplicate step %d.', $number));
+            }
+
+            $label = $step['label'] ?? '';
+
+            if (!\is_string($label)) {
+                throw InvalidPresetException::at($path.'.label', 'Expected a string.');
+            }
+
+            $steps[$number] = new PresetSpacingStep($number, trim($label));
+        }
+
+        ksort($steps);
+
+        return array_values($steps);
     }
 
     private static function parseGroup(mixed $data, string $path): PresetGroup

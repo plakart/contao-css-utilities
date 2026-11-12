@@ -29,7 +29,7 @@ final class PresetImporterTest extends TestCase
     {
         $preset = $this->fixture();
 
-        self::assertSame(['groups' => 2, 'classes' => 3, 'updatedGroups' => 0, 'updatedClasses' => 0], new PresetImporter($this->connection)->apply($preset));
+        self::assertSame(['groups' => 2, 'classes' => 3, 'spacing' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0, 'updatedSpacing' => 0], new PresetImporter($this->connection)->apply($preset));
 
         $group = $this->connection->fetchAssociative("SELECT * FROM tl_pcu_class_group WHERE alias = 'buttons'");
         self::assertIsArray($group);
@@ -59,7 +59,7 @@ final class PresetImporterTest extends TestCase
         $importer->apply($this->fixture());
 
         self::assertFalse($importer->plan($this->fixture())->hasChanges());
-        self::assertSame(['groups' => 0, 'classes' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0], $importer->apply($this->fixture()));
+        self::assertSame(['groups' => 0, 'classes' => 0, 'spacing' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0, 'updatedSpacing' => 0], $importer->apply($this->fixture()));
         self::assertSame(3, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM tl_pcu_class'));
     }
 
@@ -79,7 +79,7 @@ final class PresetImporterTest extends TestCase
         self::assertSame(1, $plan->countNewGroups());
         self::assertSame(2, $plan->countNewClasses());
 
-        self::assertSame(['groups' => 1, 'classes' => 2, 'updatedGroups' => 0, 'updatedClasses' => 0], $importer->apply($this->fixture()));
+        self::assertSame(['groups' => 1, 'classes' => 2, 'spacing' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0, 'updatedSpacing' => 0], $importer->apply($this->fixture()));
 
         // Existing group and class are untouched, the new class is appended
         $group = $this->connection->fetchAssociative('SELECT title, targets FROM tl_pcu_class_group WHERE id = ?', [$groupId]);
@@ -97,10 +97,10 @@ final class PresetImporterTest extends TestCase
     {
         $importer = new PresetImporter($this->connection);
 
-        self::assertSame(['groups' => 1, 'classes' => 1, 'updatedGroups' => 0, 'updatedClasses' => 0], $importer->apply($this->fixture(), ['buttons' => ['btn_hyperlink_secondary']]));
+        self::assertSame(['groups' => 1, 'classes' => 1, 'spacing' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0, 'updatedSpacing' => 0], $importer->apply($this->fixture(), ['buttons' => ['btn_hyperlink_secondary']]));
         self::assertSame(['btn_hyperlink_secondary'], $this->connection->fetchFirstColumn('SELECT cssClass FROM tl_pcu_class'));
 
-        self::assertSame(['groups' => 1, 'classes' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0], $importer->apply($this->fixture(), ['article-width' => []]));
+        self::assertSame(['groups' => 1, 'classes' => 0, 'spacing' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0, 'updatedSpacing' => 0], $importer->apply($this->fixture(), ['article-width' => []]));
         self::assertSame(2, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM tl_pcu_class_group'));
     }
 
@@ -142,7 +142,7 @@ final class PresetImporterTest extends TestCase
 
         $result = new PresetImporter($this->connection)->apply($this->fixture());
 
-        self::assertSame(['groups' => 1, 'classes' => 2, 'updatedGroups' => 0, 'updatedClasses' => 0], $result);
+        self::assertSame(['groups' => 1, 'classes' => 2, 'spacing' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0, 'updatedSpacing' => 0], $result);
         self::assertSame('Old title', $this->connection->fetchOne('SELECT title FROM tl_pcu_class_group WHERE id = ?', [$groupId]));
         self::assertSame('Old label', $this->connection->fetchOne("SELECT label FROM tl_pcu_class WHERE cssClass = 'btn_hyperlink_primary'"));
     }
@@ -160,7 +160,7 @@ final class PresetImporterTest extends TestCase
             ['groups' => ['buttons'], 'classes' => ['buttons' => ['btn_hyperlink_secondary']]],
         );
 
-        self::assertSame(['groups' => 0, 'classes' => 0, 'updatedGroups' => 1, 'updatedClasses' => 1], $result);
+        self::assertSame(['groups' => 0, 'classes' => 0, 'spacing' => 0, 'updatedGroups' => 1, 'updatedClasses' => 1, 'updatedSpacing' => 0], $result);
 
         $group = $this->connection->fetchAssociative('SELECT * FROM tl_pcu_class_group WHERE id = ?', [$groupId]);
         self::assertIsArray($group);
@@ -188,7 +188,7 @@ final class PresetImporterTest extends TestCase
         $importer->apply($this->fixture());
 
         self::assertSame(
-            ['groups' => 0, 'classes' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0],
+            ['groups' => 0, 'classes' => 0, 'spacing' => 0, 'updatedGroups' => 0, 'updatedClasses' => 0, 'updatedSpacing' => 0],
             $importer->apply($this->fixture(), null, ['groups' => ['buttons', 'unknown'], 'classes' => ['buttons' => ['btn_hyperlink_primary', 'nope']]]),
         );
     }

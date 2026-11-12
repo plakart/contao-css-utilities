@@ -44,6 +44,7 @@ back end can be used as a theme preset file as is.
 | `format` | yes | Always `"plakart-css-classes"` |
 | `version` | yes | Always `1` |
 | `groups` | no | List of groups, default `[]` |
+| `spacing` | no | List of additional spacing steps, default `[]` |
 
 ### Group
 
@@ -70,6 +71,23 @@ Target keys:
 
 Types are ignored for targets without types. Unknown target keys are kept and
 ignored at runtime, so one file fits installations with and without news or events.
+
+### Spacing step
+
+Additional spacing steps (13+) for the four spacing selects. The theme provides their
+CSS; the bundle only adds the select options.
+
+| Key | Required | Value |
+|---|---|---|
+| `step` | yes | Whole number from 13, unique within the file. Imports match existing steps by it |
+| `label` | no | Shown next to the number in the selects, default `""` |
+
+```json
+"spacing": [
+    { "step": 13, "label": "Hero section" },
+    { "step": 16 }
+]
+```
 
 ### Class
 
