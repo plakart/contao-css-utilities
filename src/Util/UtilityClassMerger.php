@@ -13,17 +13,26 @@ final class UtilityClassMerger
      */
     public static function merge(string $existing, array $selection): string
     {
-        $classes = preg_split('/\s+/', trim($existing), -1, \PREG_SPLIT_NO_EMPTY) ?: [];
-        $classes = array_values(array_diff($classes, UtilityClasses::all()));
+        return ClassAttributeMerger::merge($existing, UtilityClasses::all(), self::classes($selection));
+    }
+
+    /**
+     * Turns a spacing selection into class names.
+     *
+     * @param array<string, string> $selection prefix => step ('' = no class)
+     *
+     * @return list<string>
+     */
+    public static function classes(array $selection): array
+    {
+        $classes = [];
 
         foreach ($selection as $prefix => $step) {
-            if ('' === trim($step)) {
-                continue;
+            if ('' !== trim($step)) {
+                $classes[] = $prefix.'-'.trim($step);
             }
-
-            $classes[] = $prefix.'-'.$step;
         }
 
-        return implode(' ', $classes);
+        return $classes;
     }
 }
