@@ -7,13 +7,23 @@ namespace Plakart\CssUtilitiesBundle\Util;
 final class UtilityClassMerger
 {
     /**
-     * Strips all known utility classes from $existing and appends the current selection.
+     * Strips all spacing classes (mt|mb|pt|pb-<number>) from $existing and appends the current selection.
      *
      * @param array<string, string> $selection prefix => step ('' = no class)
      */
     public static function merge(string $existing, array $selection): string
     {
-        return ClassAttributeMerger::merge($existing, UtilityClasses::all(), self::classes($selection));
+        return ClassAttributeMerger::merge($existing, self::stripList($existing), self::classes($selection));
+    }
+
+    /**
+     * The fixed classes plus every numeric spacing class found in $existing (additional or deleted steps).
+     *
+     * @return list<string>
+     */
+    public static function stripList(string $existing): array
+    {
+        return [...UtilityClasses::all(), ...UtilityClasses::filterUtilityClasses(ClassAttributeMerger::tokenize($existing))];
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Plakart\CssUtilitiesBundle\Tests\Util;
 
 use PHPUnit\Framework\TestCase;
+use Plakart\CssUtilitiesBundle\EventListener\DataContainer\SpacingOptionsListener;
 use Plakart\CssUtilitiesBundle\Util\UtilityFields;
 
 final class UtilityFieldsTest extends TestCase
@@ -34,11 +35,11 @@ final class UtilityFieldsTest extends TestCase
             self::assertTrue($GLOBALS['TL_DCA']['tl_content']['fields'][$field]['exclude']);
             self::assertSame('select', $GLOBALS['TL_DCA']['tl_content']['fields'][$field]['inputType']);
             self::assertSame(
-                ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-                $GLOBALS['TL_DCA']['tl_content']['fields'][$field]['options'],
+                [SpacingOptionsListener::class, '__invoke'],
+                $GLOBALS['TL_DCA']['tl_content']['fields'][$field]['options_callback'],
             );
             self::assertSame(
-                ['type' => 'string', 'length' => 2, 'default' => ''],
+                ['type' => 'string', 'length' => 8, 'default' => ''],
                 $GLOBALS['TL_DCA']['tl_content']['fields'][$field]['sql'],
             );
         }

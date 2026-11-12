@@ -13,6 +13,17 @@ final class UtilityClasses
         'pb' => 'padding-bottom',
     ];
 
+    /**
+     * Every spacing class the bundle manages: the fixed steps 0-12 and additional
+     * numeric steps (13+) defined in the back end, including deleted ones.
+     */
+    public const PATTERN = '/^(mt|mb|pt|pb)-\d+$/';
+
+    /**
+     * Additional steps must be greater than the fixed scale.
+     */
+    public const FIRST_EXTRA_STEP = 13;
+
     public const SCALE = [
         1 => 'clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem)',
         2 => 'clamp(0.5rem, 0.4rem + 0.5vw, 1rem)',
@@ -50,6 +61,21 @@ final class UtilityClasses
         }
 
         return $classes;
+    }
+
+    public static function isUtilityClass(string $class): bool
+    {
+        return 1 === preg_match(self::PATTERN, $class);
+    }
+
+    /**
+     * @param list<string> $classes
+     *
+     * @return list<string>
+     */
+    public static function filterUtilityClasses(array $classes): array
+    {
+        return array_values(array_filter($classes, self::isUtilityClass(...)));
     }
 
     public static function generateCss(): string

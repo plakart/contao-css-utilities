@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Plakart\CssUtilitiesBundle\Util;
 
+use Plakart\CssUtilitiesBundle\EventListener\DataContainer\SpacingOptionsListener;
+
 final class UtilityFields
 {
     public const FIELDS = ['utilityMt', 'utilityMb', 'utilityPt', 'utilityPb'];
@@ -22,15 +24,13 @@ final class UtilityFields
      */
     public static function register(string $table): void
     {
-        $options = array_map(strval(...), UtilityClasses::steps());
-
         foreach (self::FIELDS as $field) {
             $GLOBALS['TL_DCA'][$table]['fields'][$field] = [
                 'exclude' => true,
                 'inputType' => 'select',
-                'options' => $options,
+                'options_callback' => [SpacingOptionsListener::class, '__invoke'],
                 'eval' => ['includeBlankOption' => true, 'tl_class' => 'w25'],
-                'sql' => ['type' => 'string', 'length' => 2, 'default' => ''],
+                'sql' => ['type' => 'string', 'length' => 8, 'default' => ''],
             ];
         }
     }

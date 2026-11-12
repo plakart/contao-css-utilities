@@ -49,11 +49,12 @@ final class UtilityClassMergerTest extends TestCase
         );
     }
 
-    public function testUnknownLookalikeClassesArePreserved(): void
+    public function testNumericSpacingClassesAreReplacedAndLookalikesPreserved(): void
     {
+        // mt-99 may be an additional or deleted step, mx-4 and mt-auto are not managed by the bundle
         self::assertSame(
-            'mt-99 mx-4 mt-2',
-            UtilityClassMerger::merge('mt-99 mx-4', ['mt' => '2', 'mb' => '', 'pt' => '', 'pb' => '']),
+            'mx-4 mt-auto mt-2',
+            UtilityClassMerger::merge('mt-99 mx-4 mt-auto', ['mt' => '2', 'mb' => '', 'pt' => '', 'pb' => '']),
         );
     }
 

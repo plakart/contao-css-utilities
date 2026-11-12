@@ -90,6 +90,15 @@ final class ClassAttributeListenerTest extends TestCase
         self::assertSame(serialize(['', 'mb-3 full--width']), $this->fetch('tl_article', $id, 'cssID'));
     }
 
+    public function testReplacesAdditionalAndDeletedSpacingSteps(): void
+    {
+        $id = $this->insert('tl_content', ['type' => 'text', 'cssID' => serialize(['', 'mt-14 mt-auto pb-99']), 'utilityMt' => '13']);
+
+        $this->invoke('tl_content', $id);
+
+        self::assertSame(serialize(['', 'mt-auto mt-13']), $this->fetch('tl_content', $id, 'cssID'));
+    }
+
     public function testWritesFormFieldClass(): void
     {
         $id = $this->insert('tl_form_field', ['type' => 'text', 'class' => 'custom pb-1', 'utilityPb' => '8', 'pcuClasses' => serialize(['width' => ['boxed narrow']])]);

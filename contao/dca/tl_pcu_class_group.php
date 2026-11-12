@@ -34,6 +34,10 @@ $GLOBALS['TL_DCA']['tl_pcu_class_group'] = [
         'global_operations' => [
             'all',
             '-',
+            'pcuSpacing' => [
+                'href' => 'table=tl_pcu_spacing',
+                'icon' => 'sizes.svg',
+            ],
             'pcuImport' => [
                 'route' => Plakart\CssUtilitiesBundle\Controller\Backend\ImportController::ROUTE,
                 'icon' => 'theme_import.svg',

@@ -35,3 +35,6 @@ services:
 
     Plakart\CssUtilitiesBundle\EventListener\DataContainer\ClassAttributeListener:
         public: true
+
+    Plakart\CssUtilitiesBundle\EventListener\DataContainer\SpacingOptionsListener:
+        public: true

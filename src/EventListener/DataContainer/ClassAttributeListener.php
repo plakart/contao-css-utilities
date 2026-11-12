@@ -13,7 +13,6 @@ use Plakart\CssUtilitiesBundle\EventListener\LoadDataContainerListener;
 use Plakart\CssUtilitiesBundle\Target\Target;
 use Plakart\CssUtilitiesBundle\Target\TargetRegistry;
 use Plakart\CssUtilitiesBundle\Util\ClassAttributeMerger;
-use Plakart\CssUtilitiesBundle\Util\UtilityClasses;
 use Plakart\CssUtilitiesBundle\Util\UtilityClassMerger;
 use Plakart\CssUtilitiesBundle\Util\UtilityFields;
 
@@ -67,9 +66,9 @@ class ClassAttributeListener
 
         $strip = $this->groups->findAllClassTokens();
         $add = [];
+        $hasUtilities = \in_array($target->table, UtilityFields::TABLES, true);
 
-        if (\in_array($target->table, UtilityFields::TABLES, true)) {
-            $strip = [...UtilityClasses::all(), ...$strip];
+        if ($hasUtilities) {
             $add = UtilityClassMerger::classes([
                 'mt' => (string) ($row['utilityMt'] ?? ''),
                 'mb' => (string) ($row['utilityMb'] ?? ''),
@@ -84,14 +83,14 @@ class ClassAttributeListener
         if ($target->isCssId()) {
             $cssId = StringUtil::deserialize($row[$target->column] ?? null, true) + ['', ''];
             $old = [(string) $cssId[0], (string) $cssId[1]];
-            $new = [$old[0], ClassAttributeMerger::merge($old[1], $strip, $add)];
+            $new = [$old[0], ClassAttributeMerger::merge($old[1], $hasUtilities ? [...$strip, ...UtilityClassMerger::stripList($old[1])] : $strip, $add)];
 
             if ($new !== $old) {
                 $updates[$target->column] = serialize($new);
             }
         } else {
             $old = (string) ($row[$target->column] ?? '');
-            $new = ClassAttributeMerger::merge($old, $strip, $add);
+            $new = ClassAttributeMerger::merge($old, $hasUtilities ? [...$strip, ...UtilityClassMerger::stripList($old)] : $strip, $add);
 
             if ($new !== $old) {
                 $updates[$target->column] = $new;
