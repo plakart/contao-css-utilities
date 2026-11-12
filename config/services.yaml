@@ -12,3 +12,4 @@ services:
             - '../src/Util/'
             - '../src/PlakartCssUtilitiesBundle.php'
             - '../src/Target/Target.php'
+            - '../src/ClassSelection/ClassGroup.php'

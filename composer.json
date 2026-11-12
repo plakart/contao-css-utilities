@@ -14,6 +14,7 @@
         "symfony/http-kernel": "^7.4 || ^8.0"
     },
     "require-dev": {
+        "ext-pdo_sqlite": "*",
         "contao/manager-plugin": "^2.12",
         "friendsofphp/php-cs-fixer": "^3.40",
         "phpstan/phpstan": "^2.0",
