@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Plakart\CssUtilitiesBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
+use Contao\StringUtil;
 use Contao\System;
 use Plakart\CssUtilitiesBundle\Util\UtilityClasses;
 
@@ -30,7 +32,7 @@ class UtilityClassLabelListener
             return;
         }
 
-        $this->wrapper = function (array $row, string $label = '', mixed ...$arguments) use ($existing): array|string {
+        $this->wrapper = function (array $row, string $label = '', mixed ...$arguments) use ($existing): array|object|string {
             $result = $this->invokeExisting($existing, $row, $label, $arguments) ?? $label;
 
             return self::appendClasses($result, $row);
@@ -40,15 +42,18 @@ class UtilityClassLabelListener
     }
 
     /**
-     * Appends the utility classes of the record to the header label. The label is
-     * either the plain label string or [label, preview, state] in the card view.
+     * Appends the utility classes of the record to the header label. The label is the
+     * plain label string, [label, preview, state] in the card view, or a RecordLabel
+     * object (Contao 6).
      *
-     * @param array<int, string>|string $label
-     * @param array<string, mixed>      $row
+     * @template T of array<int, string>|object|string
      *
-     * @return array<int, string>|string
+     * @param T                    $label
+     * @param array<string, mixed> $row
+     *
+     * @return T
      */
-    public static function appendClasses(array|string $label, array $row): array|string
+    public static function appendClasses(array|object|string $label, array $row): array|object|string
     {
         $classes = [];
 
@@ -66,6 +71,17 @@ class UtilityClassLabelListener
 
         $badge = ' <span class="tl_gray pcu-utilities">'.htmlspecialchars(implode(' ', $classes)).'</span>';
 
+        // Contao 6: Contao\CoreBundle\DataContainer\RecordLabel (class does not exist in 5.7)
+        if ($label instanceof RecordLabel) {
+            $label->htmlLabel = ($label->htmlLabel ?? StringUtil::specialchars($label->label)).$badge;
+
+            return $label;
+        }
+
+        if (\is_object($label)) {
+            return $label;
+        }
+
         if (\is_array($label)) {
             $label[0] = ($label[0] ?? '').$badge;
 
@@ -82,9 +98,9 @@ class UtilityClassLabelListener
      * @param array<string, mixed> $row
      * @param list<mixed>          $arguments
      *
-     * @return array<int, string>|string|null
+     * @return array<int, string>|object|string|null
      */
-    private function invokeExisting(mixed $existing, array $row, string $label, array $arguments): array|string|null
+    private function invokeExisting(mixed $existing, array $row, string $label, array $arguments): array|object|string|null
     {
         if (\is_array($existing)) {
             return System::importStatic($existing[0])->{$existing[1]}($row, $label, ...$arguments);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Plakart\CssUtilitiesBundle\Tests\EventListener\DataContainer;
 
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use PHPUnit\Framework\TestCase;
 use Plakart\CssUtilitiesBundle\EventListener\DataContainer\UtilityClassLabelListener;
 
@@ -42,6 +43,25 @@ final class UtilityClassLabelListenerTest extends TestCase
 
         self::assertSame('Text', UtilityClassLabelListener::appendClasses('Text', $row));
         self::assertSame(['Text', '', ''], UtilityClassLabelListener::appendClasses(['Text', '', ''], $row));
+    }
+
+    public function testAppendsClassesToRecordLabel(): void
+    {
+        if (!class_exists(RecordLabel::class)) {
+            self::markTestSkipped('RecordLabel exists since Contao 6.');
+        }
+
+        $label = new RecordLabel('Link & more');
+
+        $result = UtilityClassLabelListener::appendClasses($label, ['utilityMt' => '2']);
+
+        self::assertSame($label, $result);
+        self::assertSame('Link &amp; more <span class="tl_gray pcu-utilities">mt-2</span>', $label->htmlLabel);
+
+        $label->htmlLabel = '<strong>Link</strong>';
+        UtilityClassLabelListener::appendClasses($label, ['utilityMt' => '2']);
+
+        self::assertSame('<strong>Link</strong> <span class="tl_gray pcu-utilities">mt-2</span>', $label->htmlLabel);
     }
 
     public function testStepZeroIsShown(): void
