@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Plakart\CssUtilitiesBundle\Tests\EventListener\DataContainer;
 
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use PHPUnit\Framework\TestCase;
 use Plakart\CssUtilitiesBundle\EventListener\DataContainer\UtilityClassLabelListener;
 
@@ -42,6 +43,48 @@ final class UtilityClassLabelListenerTest extends TestCase
 
         self::assertSame('Text', UtilityClassLabelListener::appendClasses('Text', $row));
         self::assertSame(['Text', '', ''], UtilityClassLabelListener::appendClasses(['Text', '', ''], $row));
+    }
+
+    public function testAppendsSelectedGroupClassesAfterSpacing(): void
+    {
+        $label = UtilityClassLabelListener::appendClasses('Link', [
+            'utilityMt' => '4',
+            'pcuClasses' => serialize(['buttons' => ['btn-primary'], 'width' => ['full--width', 'boxed narrow']]),
+        ]);
+
+        self::assertSame('Link <span class="tl_gray pcu-utilities">mt-4 btn-primary full--width boxed narrow</span>', $label);
+    }
+
+    public function testShowsGroupClassesWithoutSpacing(): void
+    {
+        $label = UtilityClassLabelListener::appendClasses('Link', ['pcuClasses' => serialize(['buttons' => ['<b>']])]);
+
+        self::assertSame('Link <span class="tl_gray pcu-utilities">&lt;b&gt;</span>', $label);
+    }
+
+    public function testIgnoresInvalidStoredSelection(): void
+    {
+        self::assertSame('Link', UtilityClassLabelListener::appendClasses('Link', ['pcuClasses' => 'garbage']));
+        self::assertSame('Link', UtilityClassLabelListener::appendClasses('Link', ['pcuClasses' => null]));
+    }
+
+    public function testAppendsClassesToRecordLabel(): void
+    {
+        if (!class_exists(RecordLabel::class)) {
+            self::markTestSkipped('RecordLabel exists since Contao 6.');
+        }
+
+        $label = new RecordLabel('Link & more');
+
+        $result = UtilityClassLabelListener::appendClasses($label, ['utilityMt' => '2']);
+
+        self::assertSame($label, $result);
+        self::assertSame('Link &amp; more <span class="tl_gray pcu-utilities">mt-2</span>', $label->htmlLabel);
+
+        $label->htmlLabel = '<strong>Link</strong>';
+        UtilityClassLabelListener::appendClasses($label, ['utilityMt' => '2']);
+
+        self::assertSame('<strong>Link</strong> <span class="tl_gray pcu-utilities">mt-2</span>', $label->htmlLabel);
     }
 
     public function testStepZeroIsShown(): void
